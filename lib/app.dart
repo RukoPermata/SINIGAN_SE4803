@@ -1,6 +1,8 @@
+
 import 'package:flutter/material.dart';
 
 import 'core/theme/app_theme.dart';
+import 'features/auth/screens/login_screen.dart';
 
 class SiniGanApp extends StatelessWidget {
   const SiniGanApp({super.key});
@@ -11,11 +13,7 @@ class SiniGanApp extends StatelessWidget {
       title: 'SINI-GAN',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
-      home: const Scaffold(
-        body: Center(
-          child: Text('SINI-GAN'),
-        ),
-      ),
+      home: const LoginScreen(),
     );
   }
 }
