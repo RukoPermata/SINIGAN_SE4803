@@ -6,7 +6,7 @@ import 'package:sini_gan/features/student/screens/student_profile_screen.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../data/mock_data_store.dart';
 import '../../../models/room.dart';
-import '../widgets/student_bottom_nav.dart';
+import '../../shared/bottom_nav.dart';
 
 class StudentHomeScreen extends StatefulWidget {
   const StudentHomeScreen({super.key});
@@ -48,7 +48,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
 
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: pages),
-      bottomNavigationBar: StudentBottomNav(
+      bottomNavigationBar: BottomNav(
+        role: UserRole.student,
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
