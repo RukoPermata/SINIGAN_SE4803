@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../admin/screens/admin_dashboard_screen.dart';
 import '../../student/screens/student_home_screen.dart';
 import 'register_screen.dart';
 
@@ -19,7 +20,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   bool _obscurePassword = true;
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -28,18 +28,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _loginDemo(String role) {
-    if (!_formKey.currentState!.validate()) return;
-
-    _openDemoPage(role);
-  }
-
-  void _openDemoPage(String role) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => _DemoLandingScreen(role: role)),
-    );
-  }
 
   void _openRegister() {
     Navigator.push(
@@ -189,7 +177,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 12),
                     OutlinedButton.icon(
-                      onPressed: () => _openDemoPage('admin'),
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AdminDashboardScreen(),
+                          ),
+                        );
+                      },
                       icon: const Icon(Icons.admin_panel_settings_outlined),
                       label: const Text('Masuk sebagai Admin'),
                       style: OutlinedButton.styleFrom(
@@ -292,75 +287,3 @@ class _FieldLabel extends StatelessWidget {
   }
 }
 
-/// Halaman sementara untuk menguji tombol demo.
-/// Ganti dengan StudentHomeScreen dan AdminDashboardScreen
-/// setelah kedua screen tersebut selesai diimplementasikan.
-class _DemoLandingScreen extends StatelessWidget {
-  const _DemoLandingScreen({required this.role});
-
-  final String role;
-
-  @override
-  Widget build(BuildContext context) {
-    final isStudent = role == 'student';
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(isStudent ? 'Demo Mahasiswa' : 'Demo Admin'),
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            tooltip: 'Logout',
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => const LoginScreen()),
-                (route) => false,
-              );
-            },
-            icon: const Icon(Icons.logout),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                isStudent
-                    ? Icons.school_outlined
-                    : Icons.admin_panel_settings_outlined,
-                size: 64,
-                color: AppColors.primary,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                isStudent ? 'Beranda Mahasiswa' : 'Dashboard Admin',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Halaman sementara untuk menguji alur demo.',
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (_) => const LoginScreen()),
-                    (route) => false,
-                  );
-                },
-                icon: const Icon(Icons.logout),
-                label: const Text('Kembali ke Login'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
