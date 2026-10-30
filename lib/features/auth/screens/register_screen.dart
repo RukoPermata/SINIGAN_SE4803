@@ -223,7 +223,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     _buildLabel('Daftar Sebagai'),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<String>(
-                      value: _selectedRole,
+                      initialValue: _selectedRole,
                       decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.group_outlined),
                       ),
