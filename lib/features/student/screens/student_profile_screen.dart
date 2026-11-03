@@ -341,11 +341,7 @@ class StudentProfileScreen extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton.icon(
-        onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Halaman admin belum terhubung.')),
-          );
-        },
+        onPressed: () => Get.offNamed(AppRoutes.adminDashboard),
         icon: const Icon(Icons.admin_panel_settings_outlined),
         label: const Text('Switch to Campus Administrator View'),
         style: OutlinedButton.styleFrom(

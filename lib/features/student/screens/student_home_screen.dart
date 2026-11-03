@@ -1,12 +1,16 @@
 // PIC: Farrel - Student Home Screen - FR-02
 
 import 'package:flutter/material.dart';
-import 'package:sini_gan/features/student/screens/student_profile_screen.dart';
+import 'package:get/get.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../data/mock_data_store.dart';
 import '../../../models/room.dart';
 import '../../shared/bottom_nav.dart';
+import 'booking_history_screen.dart';
+import 'room_catalog_screen.dart';
+import 'room_detail_screen.dart';
+import 'student_profile_screen.dart';
 
 class StudentHomeScreen extends StatefulWidget {
   const StudentHomeScreen({super.key});
@@ -32,17 +36,9 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      _buildHomeContent(),
-      _buildPlaceholder(
-        icon: Icons.search_rounded,
-        title: 'Explore Rooms',
-        description: 'Cari dan temukan ruangan kampus.',
-      ),
-      _buildPlaceholder(
-        icon: Icons.calendar_month_outlined,
-        title: 'My Bookings',
-        description: 'Riwayat peminjamanmu akan tampil di sini.',
-      ),
+      _buildHomeTab(),
+      const RoomCatalogScreen(),
+      const BookingHistoryScreen(),
       const StudentProfileScreen(),
     ];
 
@@ -57,6 +53,13 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
           });
         },
       ),
+    );
+  }
+
+  Widget _buildHomeTab() {
+    return GetBuilder<MockDataStore>(
+      init: MockDataStore.instance,
+      builder: (_) => _buildHomeContent(),
     );
   }
 
@@ -108,7 +111,13 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                           separatorBuilder: (context, index) =>
                               const SizedBox(width: 16),
                           itemBuilder: (context, index) {
-                            return _buildRoomCard(rooms[index]);
+                            return InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () => Get.to(
+                                () => RoomDetailScreen(room: rooms[index]),
+                              ),
+                              child: _buildRoomCard(rooms[index]),
+                            );
                           },
                         ),
                 ),
@@ -513,31 +522,4 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
     );
   }
 
-  Widget _buildPlaceholder({
-    required IconData icon,
-    required String title,
-    required String description,
-  }) {
-    return SafeArea(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, size: 56, color: AppColors.primary),
-              const SizedBox(height: 16),
-              Text(title, style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 8),
-              Text(
-                description,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: AppColors.textSecondary),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
