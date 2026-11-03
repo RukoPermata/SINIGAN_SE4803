@@ -1,6 +1,7 @@
 // PIC: Fityah - Schedule Management Screen - FR-11, FR-12
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
@@ -82,9 +83,9 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: MockDataStore.instance,
-      builder: (context, _) {
+    return GetBuilder<MockDataStore>(
+      init: MockDataStore.instance,
+      builder: (_) {
         final regularSchedules = MockDataStore.instance.regularSchedules;
         final blackoutPeriods = MockDataStore.instance.blackoutPeriods;
         final rooms = MockDataStore.instance.rooms;

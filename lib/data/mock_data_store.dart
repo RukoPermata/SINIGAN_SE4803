@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/blackout_period.dart';
@@ -15,9 +15,9 @@ import 'mock_schedules.dart';
 /// Single source of truth aplikasi SINI-GAN.
 /// Menyimpan seluruh data (ruangan, peminjaman, jadwal kuliah, dan blackout) di memori
 /// dan mem-persistensinya secara lokal melalui [SharedPreferences] dalam format JSON.
-/// Menggunakan [ChangeNotifier] agar perubahan data langsung reaktif tercermin pada
+/// Menggunakan [GetxController] agar perubahan data langsung reaktif tercermin pada
 /// seluruh layar aplikasi yang mendengarkan instance ini.
-class MockDataStore extends ChangeNotifier {
+class MockDataStore extends GetxController {
   MockDataStore._internal() {
     _rooms = List.from(mockRooms);
     _bookings = List.from(mockBookings);
@@ -25,8 +25,18 @@ class MockDataStore extends ChangeNotifier {
     _blackoutPeriods = List.from(mockBlackoutPeriods);
   }
 
-  /// Singleton instance agar seluruh layar mengakses data yang sama
-  static final MockDataStore instance = MockDataStore._internal();
+  static MockDataStore? _instance;
+
+  /// Singleton instance agar seluruh layar mengakses data yang sama.
+  /// Terdaftar otomatis pada container dependensi GetX melalui `Get.put`.
+  static MockDataStore get instance {
+    if (Get.isRegistered<MockDataStore>()) {
+      return Get.find<MockDataStore>();
+    }
+    final controller = _instance ??= MockDataStore._internal();
+    Get.put<MockDataStore>(controller, permanent: true);
+    return controller;
+  }
 
   // Kunci penyimpanan lokal
   static const String _kSeedVersion = 'sg_seed_version';
@@ -69,7 +79,7 @@ class MockDataStore extends ChangeNotifier {
         _decodeList(prefs.getString(_kBlackouts), BlackoutPeriod.fromJson) ??
             List.from(mockBlackoutPeriods);
 
-    notifyListeners();
+    update();
   }
 
   Future<void> _seed(SharedPreferences prefs) async {
@@ -79,7 +89,7 @@ class MockDataStore extends ChangeNotifier {
     _blackoutPeriods = List.from(mockBlackoutPeriods);
     await _persist(prefs);
     await prefs.setInt(_kSeedVersion, _seedVersion);
-    notifyListeners();
+    update();
   }
 
   List<T>? _decodeList<T>(
@@ -183,7 +193,7 @@ class MockDataStore extends ChangeNotifier {
   /// Menambah ruangan baru ke dalam sistem
   void addRoom(Room room) {
     _rooms.add(room);
-    notifyListeners();
+    update();
     _save();
   }
 
@@ -192,7 +202,7 @@ class MockDataStore extends ChangeNotifier {
     final index = _rooms.indexWhere((r) => r.id == room.id);
     if (index != -1) {
       _rooms[index] = room;
-      notifyListeners();
+      update();
       _save();
     }
   }
@@ -203,7 +213,7 @@ class MockDataStore extends ChangeNotifier {
     if (index != -1) {
       final current = _rooms[index];
       _rooms[index] = current.copyWith(isActive: !current.isActive);
-      notifyListeners();
+      update();
       _save();
     }
   }
@@ -211,7 +221,7 @@ class MockDataStore extends ChangeNotifier {
   /// Menghapus ruangan dari master data
   void deleteRoom(String roomId) {
     _rooms.removeWhere((r) => r.id == roomId);
-    notifyListeners();
+    update();
     _save();
   }
 
@@ -227,7 +237,7 @@ class MockDataStore extends ChangeNotifier {
   /// Menambah jadwal kuliah reguler baru
   void addRegularSchedule(RegularSchedule schedule) {
     _regularSchedules.add(schedule);
-    notifyListeners();
+    update();
     _save();
   }
 
@@ -236,7 +246,7 @@ class MockDataStore extends ChangeNotifier {
     final index = _regularSchedules.indexWhere((s) => s.id == schedule.id);
     if (index != -1) {
       _regularSchedules[index] = schedule;
-      notifyListeners();
+      update();
       _save();
     }
   }
@@ -244,7 +254,7 @@ class MockDataStore extends ChangeNotifier {
   /// Menghapus jadwal kuliah reguler berdasarkan ID
   void deleteRegularSchedule(String scheduleId) {
     _regularSchedules.removeWhere((s) => s.id == scheduleId);
-    notifyListeners();
+    update();
     _save();
   }
 
@@ -254,7 +264,7 @@ class MockDataStore extends ChangeNotifier {
     if (index != -1) {
       final current = _regularSchedules[index];
       _regularSchedules[index] = current.copyWith(isActive: !current.isActive);
-      notifyListeners();
+      update();
       _save();
     }
   }
@@ -274,7 +284,7 @@ class MockDataStore extends ChangeNotifier {
   /// Menambah periode blackout baru
   void addBlackoutPeriod(BlackoutPeriod period) {
     _blackoutPeriods.add(period);
-    notifyListeners();
+    update();
     _save();
   }
 
@@ -283,7 +293,7 @@ class MockDataStore extends ChangeNotifier {
     final index = _blackoutPeriods.indexWhere((bo) => bo.id == period.id);
     if (index != -1) {
       _blackoutPeriods[index] = period;
-      notifyListeners();
+      update();
       _save();
     }
   }
@@ -291,7 +301,7 @@ class MockDataStore extends ChangeNotifier {
   /// Menghapus periode blackout berdasarkan ID
   void deleteBlackoutPeriod(String periodId) {
     _blackoutPeriods.removeWhere((bo) => bo.id == periodId);
-    notifyListeners();
+    update();
     _save();
   }
 
@@ -301,7 +311,7 @@ class MockDataStore extends ChangeNotifier {
     if (index != -1) {
       final current = _blackoutPeriods[index];
       _blackoutPeriods[index] = current.copyWith(isActive: !current.isActive);
-      notifyListeners();
+      update();
       _save();
     }
   }
@@ -371,7 +381,7 @@ class MockDataStore extends ChangeNotifier {
   /// Menambah permohonan peminjaman baru (dipanggil saat mahasiswa submit form)
   void addBooking(Booking booking) {
     _bookings.insert(0, booking);
-    notifyListeners();
+    update();
     _save();
   }
 
@@ -383,7 +393,7 @@ class MockDataStore extends ChangeNotifier {
         status: BookingStatus.approved,
         rejectionReason: null,
       );
-      notifyListeners();
+      update();
       _save();
     }
   }
@@ -397,7 +407,7 @@ class MockDataStore extends ChangeNotifier {
         rejectionReason:
             reason.trim().isEmpty ? 'Tidak memenuhi ketentuan' : reason.trim(),
       );
-      notifyListeners();
+      update();
       _save();
     }
   }
@@ -418,7 +428,7 @@ class MockDataStore extends ChangeNotifier {
         predictedLayout: predictedLayout ?? _bookings[index].predictedLayout,
         cvConfidence: cvConfidence ?? _bookings[index].cvConfidence,
       );
-      notifyListeners();
+      update();
       _save();
     }
   }

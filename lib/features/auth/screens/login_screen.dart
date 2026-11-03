@@ -1,11 +1,10 @@
 // PIC: Farrel - Login Screen - FR-01, FR-20
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../admin/screens/admin_dashboard_screen.dart';
-import '../../student/screens/student_home_screen.dart';
-import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,10 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
   void _openRegister() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const RegisterScreen()),
-    );
+    Get.toNamed(AppRoutes.register);
   }
 
   @override
@@ -125,12 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         if (!_formKey.currentState!.validate()) return;
 
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const StudentHomeScreen(),
-                          ),
-                        );
+                        Get.offNamed(AppRoutes.studentHome);
                       },
                       child: const Text('Masuk'),
                     ),
@@ -156,14 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 16),
 
                     OutlinedButton.icon(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const StudentHomeScreen(),
-                          ),
-                        );
-                      },
+                      onPressed: () => Get.offNamed(AppRoutes.studentHome),
                       icon: const Icon(Icons.school_outlined),
                       label: const Text('Masuk sebagai Mahasiswa'),
                       style: OutlinedButton.styleFrom(
@@ -177,14 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 12),
                     OutlinedButton.icon(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const AdminDashboardScreen(),
-                          ),
-                        );
-                      },
+                      onPressed: () => Get.offNamed(AppRoutes.adminDashboard),
                       icon: const Icon(Icons.admin_panel_settings_outlined),
                       label: const Text('Masuk sebagai Admin'),
                       style: OutlinedButton.styleFrom(

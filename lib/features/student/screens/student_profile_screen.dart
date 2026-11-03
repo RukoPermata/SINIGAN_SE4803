@@ -1,9 +1,10 @@
 // PIC: Farrel - Student Profile Screen - FR-20
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../auth/screens/login_screen.dart';
 
 class StudentProfileScreen extends StatelessWidget {
   const StudentProfileScreen({super.key});
@@ -374,15 +375,11 @@ class StudentProfileScreen extends StatelessWidget {
                 ),
                 actions: [
                   TextButton(
-                    onPressed: () {
-                      Navigator.pop(dialogContext, false);
-                    },
+                    onPressed: () => Get.back(result: false),
                     child: const Text('Batal'),
                   ),
                   FilledButton(
-                    onPressed: () {
-                      Navigator.pop(dialogContext, true);
-                    },
+                    onPressed: () => Get.back(result: true),
                     child: const Text('Logout'),
                   ),
                 ],
@@ -392,10 +389,7 @@ class StudentProfileScreen extends StatelessWidget {
 
           if (shouldLogout != true || !context.mounted) return;
 
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => const LoginScreen()),
-            (route) => false,
-          );
+          Get.offAllNamed(AppRoutes.login);
         },
         icon: const Icon(Icons.logout_rounded),
         label: const Text('Logout'),

@@ -2,9 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
+import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
-import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -54,9 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           actions: [
             FilledButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
+              onPressed: () => Get.back(),
               child: const Text('Kembali ke Login'),
             ),
           ],
@@ -66,11 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (!mounted) return;
 
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
-      (route) => false,
-    );
+    Get.offAllNamed(AppRoutes.login);
   }
 
   @override
@@ -79,7 +74,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       appBar: AppBar(
         leading: IconButton(
           tooltip: 'Kembali',
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Get.back(),
           icon: const Icon(Icons.arrow_back),
         ),
       ),
@@ -260,12 +255,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () => Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const LoginScreen(),
-                            ),
-                          ),
+                          onPressed: () => Get.offNamed(AppRoutes.login),
                           child: const Text('Masuk'),
                         ),
                       ],
