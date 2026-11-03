@@ -77,4 +77,34 @@ class BlackoutPeriod {
       createdBy: createdBy ?? this.createdBy,
     );
   }
+
+  /// Serialisasi entitas ke Map agar dapat disimpan sebagai JSON lokal.
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'roomId': roomId,
+      'roomName': roomName,
+      'title': title,
+      'reason': reason,
+      'startDate': startDate.toIso8601String(),
+      'endDate': endDate.toIso8601String(),
+      'isActive': isActive,
+      'createdBy': createdBy,
+    };
+  }
+
+  /// Membuat entitas BlackoutPeriod dari Map hasil dekode JSON.
+  factory BlackoutPeriod.fromJson(Map<String, dynamic> json) {
+    return BlackoutPeriod(
+      id: json['id'] as String,
+      roomId: json['roomId'] as String?,
+      roomName: json['roomName'] as String? ?? 'Semua Ruangan',
+      title: json['title'] as String? ?? '',
+      reason: json['reason'] as String? ?? '',
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: DateTime.parse(json['endDate'] as String),
+      isActive: json['isActive'] as bool? ?? true,
+      createdBy: json['createdBy'] as String? ?? '',
+    );
+  }
 }
