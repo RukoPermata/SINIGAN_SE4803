@@ -104,7 +104,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                       : ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: rooms.length,
-                          separatorBuilder: (_, __) =>
+                          separatorBuilder: (context, index) =>
                               const SizedBox(width: 16),
                           itemBuilder: (context, index) {
                             return _buildRoomCard(rooms[index]);
@@ -343,7 +343,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                   width: double.infinity,
                   height: 145,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) {
+                  errorBuilder: (context, error, stackTrace) {
                     return Container(
                       height: 145,
                       color: AppColors.lavender,

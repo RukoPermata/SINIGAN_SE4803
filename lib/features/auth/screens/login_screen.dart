@@ -19,7 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   bool _obscurePassword = true;
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -28,11 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _loginDemo(String role) {
-    if (!_formKey.currentState!.validate()) return;
-
-    _openDemoPage(role);
-  }
 
   void _openDemoPage(String role) {
     Navigator.pushReplacement(
