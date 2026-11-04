@@ -8,12 +8,18 @@ final List<Booking> mockBookings = [
     roomName: 'TULT-0701',
     building: 'Gedung TULT',
     userName: 'Raka Pratama',
-    userNim: '1301213001',
+    userNim: '103022400032',
     date: DateTime.now().add(const Duration(days: 1)),
     startTime: '09:00',
     endTime: '12:00',
     purpose: 'Tutorial Tambahan Mata Kuliah Pemrograman Berorientasi Objek',
     status: BookingStatus.pending,
+    beforePhotoUrl:
+        'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80',
+    afterPhotoUrl:
+        'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=600&q=80',
+    predictedLayout: 'Standar',
+    cvConfidence: 0.92,
     createdAt: DateTime.now().subtract(const Duration(hours: 3)),
   ),
   Booking(
@@ -22,12 +28,18 @@ final List<Booking> mockBookings = [
     roomName: 'KU3.03.01',
     building: 'Gedung Tokong Nanas (KU3)',
     userName: 'Siti Nurhaliza',
-    userNim: '1301213045',
+    userNim: '103022400085',
     date: DateTime.now().add(const Duration(days: 2)),
     startTime: '13:30',
     endTime: '15:30',
     purpose: 'Rapat Kerja Divisi Kominfo HIMA RPL 2026',
     status: BookingStatus.approved,
+    beforePhotoUrl:
+        'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=600&q=80',
+    afterPhotoUrl:
+        'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=600&q=80',
+    predictedLayout: 'Diskusi',
+    cvConfidence: 0.88,
     createdAt: DateTime.now().subtract(const Duration(days: 1)),
   ),
   Booking(
@@ -36,7 +48,7 @@ final List<Booking> mockBookings = [
     roomName: 'Lab Multimedia FIF',
     building: 'Gedung Panambulai (FIF)',
     userName: 'Fajar Hidayat',
-    userNim: '1301213088',
+    userNim: '103022400096',
     date: DateTime.now().subtract(const Duration(days: 1)),
     startTime: '10:00',
     endTime: '12:30',
@@ -44,6 +56,12 @@ final List<Booking> mockBookings = [
     status: BookingStatus.rejected,
     rejectionReason:
         'Ruangan sedang digunakan untuk praktikum reguler Grafika Komputer (Bentrok Jadwal).',
+    beforePhotoUrl:
+        'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80',
+    afterPhotoUrl:
+        'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80',
+    predictedLayout: 'Standar',
+    cvConfidence: 0.95,
     createdAt: DateTime.now().subtract(const Duration(days: 2)),
   ),
   Booking(
@@ -52,7 +70,7 @@ final List<Booking> mockBookings = [
     roomName: 'TULT-1102',
     building: 'Gedung TULT',
     userName: 'Raka Pratama',
-    userNim: '1301213001',
+    userNim: '103022400110',
     date: DateTime.now().subtract(const Duration(days: 2)),
     startTime: '14:00',
     endTime: '16:00',
