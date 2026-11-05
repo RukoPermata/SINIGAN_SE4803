@@ -8,7 +8,6 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/status_badge.dart';
 import '../../../data/mock_data_store.dart';
 import '../../../models/room.dart';
-import '../../auth/screens/login_screen.dart';
 
 /// Layar utama pengelolaan master data ruangan kampus oleh Administrator (FR-10).
 /// Mendukung pemantauan reaktif, pencarian, pemfilteran gedung/status,
@@ -31,14 +30,6 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
-  }
-
-  void _logout() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
-      (route) => false,
-    );
   }
 
   void _showRoomFormModal({Room? room}) {
@@ -117,11 +108,6 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
             tooltip: 'Add Room',
             icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
             onPressed: () => _showRoomFormModal(),
-          ),
-          IconButton(
-            tooltip: 'Logout',
-            onPressed: _logout,
-            icon: const Icon(Icons.logout),
           ),
         ],
       ),
