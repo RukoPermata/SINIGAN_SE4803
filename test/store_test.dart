@@ -22,7 +22,7 @@ void main() {
 
   test('load() restores collections from stored JSON', () async {
     SharedPreferences.setMockInitialValues({
-      'sg_seed_version': 1,
+      'sg_seed_version': 2,
       'sg_rooms': jsonEncode([
         {
           'id': 'room-test',

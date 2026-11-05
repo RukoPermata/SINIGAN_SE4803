@@ -46,7 +46,7 @@ class MockDataStore extends GetxController {
   static const String _kBlackouts = 'sg_blackouts';
 
   /// Versi skema data tiruan. Naikkan nilai ini untuk memaksa seed ulang data lokal.
-  static const int _seedVersion = 1;
+  static const int _seedVersion = 2;
 
   late List<Room> _rooms;
   late List<Booking> _bookings;
