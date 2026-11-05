@@ -288,79 +288,10 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
 
   /// Menampilkan dialog input alasan penolakan.
   Future<void> _rejectBooking() async {
-    final reasonController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
-
     final reason = await showDialog<String>(
       context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          actionsAlignment: MainAxisAlignment.center,
-          title: const Text('Reject Request'),
-          content: Form(
-            key: formKey,
-            child: TextFormField(
-              controller: reasonController,
-              autofocus: true,
-              maxLines: 4,
-              decoration: const InputDecoration(
-                labelText: 'Rejection reason',
-                hintText: 'Enter a rejection reason...',
-                alignLabelWithHint: true,
-              ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'A rejection reason is required.';
-                }
-
-                if (value.trim().length < 5) {
-                  return 'Reason must be at least 5 characters.';
-                }
-
-                return null;
-              },
-            ),
-          ),
-          actions: [
-  SizedBox(
-    width: double.infinity,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            if (formKey.currentState!.validate()) {
-              Navigator.pop(
-                dialogContext,
-                reasonController.text.trim(),
-              );
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.error,
-          ),
-          child: const Text('Reject'),
-        ),
-        Center(
-          child: TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.textSecondary,
-            ),
-            child: const Text('Cancel'),
-          ),
-        ),
-      ],
-    ),
-  ),
-],
-        );
-      },
+      builder: (dialogContext) => const _RejectReasonDialog(),
     );
-
-    reasonController.dispose();
 
     if (reason == null || reason.isEmpty) {
       return;
@@ -382,6 +313,92 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
     );
 
     Navigator.pop(context, true);
+  }
+}
+
+/// Dialog untuk menginput alasan penolakan booking.
+class _RejectReasonDialog extends StatefulWidget {
+  const _RejectReasonDialog();
+
+  @override
+  State<_RejectReasonDialog> createState() => _RejectReasonDialogState();
+}
+
+class _RejectReasonDialogState extends State<_RejectReasonDialog> {
+  final TextEditingController _reasonController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _reasonController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      actionsAlignment: MainAxisAlignment.center,
+      title: const Text('Reject Request'),
+      content: Form(
+        key: _formKey,
+        child: TextFormField(
+          controller: _reasonController,
+          autofocus: true,
+          maxLines: 4,
+          decoration: const InputDecoration(
+            labelText: 'Rejection reason',
+            hintText: 'Enter a rejection reason...',
+            alignLabelWithHint: true,
+          ),
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return 'A rejection reason is required.';
+            }
+
+            if (value.trim().length < 5) {
+              return 'Reason must be at least 5 characters.';
+            }
+
+            return null;
+          },
+        ),
+      ),
+      actions: [
+        SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    Navigator.pop(
+                      context,
+                      _reasonController.text.trim(),
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.error,
+                ),
+                child: const Text('Reject'),
+              ),
+              Center(
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.textSecondary,
+                  ),
+                  child: const Text('Cancel'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
 
