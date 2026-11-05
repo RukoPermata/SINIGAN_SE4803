@@ -19,8 +19,8 @@ class RoomConditionDetailScreen extends StatelessWidget {
 
   void _submitDecision(BuildContext context, bool isApproved) {
     final message = isApproved
-        ? 'Kondisi ruangan ${booking.roomName} berhasil diverifikasi.'
-        : 'Laporan ketidaksesuaian tata letak ruangan ${booking.roomName} telah dicatat.';
+        ? 'Room condition for ${booking.roomName} verified.'
+        : 'A layout mismatch report for ${booking.roomName} has been recorded.';
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -35,14 +35,14 @@ class RoomConditionDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final predicted = booking.predictedLayout ?? 'Standar';
-    const target = 'Standar';
+    final predicted = booking.predictedLayout ?? 'Standard';
+    const target = 'Standard';
     final confidence = (booking.cvConfidence ?? 0.94) * 100;
     final isMatching = predicted.toLowerCase() == target.toLowerCase();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pemeriksaan ${booking.roomName}'),
+        title: Text('Inspection ${booking.roomName}'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -74,16 +74,19 @@ class RoomConditionDetailScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                booking.roomName,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
+              Expanded(
+                child: Text(
+                  booking.roomName,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
               ),
+              const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
@@ -126,7 +129,7 @@ class RoomConditionDetailScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Dokumentasi Foto Ruangan',
+          'Room Photo Documentation',
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
@@ -135,7 +138,7 @@ class RoomConditionDetailScreen extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         const Text(
-          'Perbandingan visual kondisi sebelum dan sesudah kegiatan.',
+          'Visual comparison of the room before and after the activity.',
           style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
         ),
         const SizedBox(height: 12),
@@ -143,16 +146,16 @@ class RoomConditionDetailScreen extends StatelessWidget {
           children: [
             Expanded(
               child: _buildDetailPhotoBox(
-                title: 'Sebelum (Before)',
-                subtitle: 'Serah terima kunci',
+                title: 'Before',
+                subtitle: 'Key handover',
                 imageUrl: booking.beforePhotoUrl,
               ),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: _buildDetailPhotoBox(
-                title: 'Sesudah (After)',
-                subtitle: 'Checkout mahasiswa',
+                title: 'After',
+                subtitle: 'Student checkout',
                 imageUrl: booking.afterPhotoUrl,
               ),
             ),
@@ -222,7 +225,7 @@ class RoomConditionDetailScreen extends StatelessWidget {
           Icon(Icons.image_outlined, size: 28, color: AppColors.primary),
           SizedBox(height: 4),
           Text(
-            'Foto belum tersedia',
+            'No photo available',
             style: TextStyle(fontSize: 10, color: AppColors.textSecondary),
           ),
         ],
@@ -251,30 +254,32 @@ class RoomConditionDetailScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Analisis Computer Vision',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
+              const Expanded(
+                child: Text(
+                  'Computer Vision Analysis',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
               ),
+              const SizedBox(width: 8),
               StatusBadge(
                 status: isMatching ? 'approved' : 'pending',
-                customLabel: isMatching ? 'Tata Letak Sesuai' : 'Perlu Tinjauan',
+                customLabel: isMatching ? 'Layout Matches' : 'Needs Review',
               ),
             ],
           ),
           const SizedBox(height: 12),
           const Divider(height: 1),
           const SizedBox(height: 12),
-          _buildRow('Model Inferensi', 'MobileNetV3 Layout Classifier'),
+          _buildRow('Inference Model', 'MobileNetV3 Layout Classifier'),
           const SizedBox(height: 6),
-          _buildRow('Tata Letak Terdeteksi', predicted),
+          _buildRow('Detected Layout', predicted),
           const SizedBox(height: 6),
-          _buildRow('Target Ruangan', target),
+          _buildRow('Target Layout', target),
           const SizedBox(height: 6),
           _buildRow('Confidence Score', '${confidence.toStringAsFixed(1)}%'),
           const SizedBox(height: 12),
@@ -286,8 +291,8 @@ class RoomConditionDetailScreen extends StatelessWidget {
             ),
             child: Text(
               isMatching
-                  ? 'Keterangan: Susunan meja dan kursi terdeteksi sesuai dengan konfigurasi perkuliahan standar.'
-                  : 'Keterangan: Terdeteksi indikasi perubahan posisi meja atau kursi dari konfigurasi target ruangan.',
+                  ? 'Note: The desk and chair layout matches the standard classroom configuration.'
+                  : 'Note: A change in desk or chair positions was detected versus the room target layout.',
               style: const TextStyle(
                 fontSize: 11,
                 color: AppColors.textSecondary,
@@ -316,7 +321,7 @@ class RoomConditionDetailScreen extends StatelessWidget {
       children: [
         ElevatedButton(
           onPressed: () => _submitDecision(context, true),
-          child: const Text('Verifikasi Ruangan Selesai'),
+          child: const Text('Mark Room Verified'),
         ),
         const SizedBox(height: 10),
         OutlinedButton(
@@ -325,7 +330,7 @@ class RoomConditionDetailScreen extends StatelessWidget {
             foregroundColor: AppColors.error,
             side: const BorderSide(color: AppColors.error),
           ),
-          child: const Text('Tandai Butuh Penertiban'),
+          child: const Text('Flag for Rearrangement'),
         ),
       ],
     );

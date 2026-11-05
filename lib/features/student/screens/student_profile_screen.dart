@@ -3,11 +3,44 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/constants/app_constants.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../shared/widgets/profile_widgets.dart';
 
-class StudentProfileScreen extends StatelessWidget {
+class StudentProfileScreen extends StatefulWidget {
   const StudentProfileScreen({super.key});
+
+  @override
+  State<StudentProfileScreen> createState() => _StudentProfileScreenState();
+}
+
+class _StudentProfileScreenState extends State<StudentProfileScreen> {
+  bool _notificationsEnabled = true;
+
+  Future<void> _logout() async {
+    final shouldLogout = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to sign out?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Logout'),
+          ),
+        ],
+      ),
+    );
+
+    if (shouldLogout == true) {
+      Get.offAllNamed(AppRoutes.login);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,29 +52,86 @@ class StudentProfileScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildHeader(),
+              const Text(
+                'My Profile',
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'Manage your account and preferences.',
+                style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+              ),
               const SizedBox(height: 28),
-              _buildProfileCard(),
+              ProfileIdentityCard(
+                avatar: const Text(
+                  'RP',
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 30,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                name: AppConstants.currentStudentName,
+                subtitle: AppConstants.currentStudentEmail,
+                infoRows: const [
+                  ProfileInfoRow(
+                    icon: Icons.badge_outlined,
+                    label: 'Student ID',
+                    value: AppConstants.currentStudentNim,
+                  ),
+                  ProfileInfoRow(
+                    icon: Icons.school_outlined,
+                    label: 'Program',
+                    value: 'S1 Software Engineering',
+                  ),
+                  ProfileInfoRow(
+                    icon: Icons.verified_user_outlined,
+                    label: 'Status',
+                    value: 'Active Student',
+                    valueColor: AppColors.success,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              _buildQuotaCard(),
               const SizedBox(height: 28),
-              _buildSectionTitle('Account Settings'),
-              const SizedBox(height: 14),
-              _buildNotificationCard(),
-              const SizedBox(height: 28),
-              _buildSectionTitle('Preferences'),
-              const SizedBox(height: 14),
-              _buildPreferenceCard(),
-              const SizedBox(height: 28),
-              _buildAdminButton(context),
+              const ProfileSectionTitle('Settings'),
               const SizedBox(height: 12),
-              _buildLogoutButton(context),
+              ProfileSwitchTile(
+                icon: Icons.notifications_active_outlined,
+                title: 'Booking Notifications',
+                subtitle: 'Receive updates about your reservations',
+                value: _notificationsEnabled,
+                onChanged: (value) =>
+                    setState(() => _notificationsEnabled = value),
+              ),
+              const SizedBox(height: 12),
+              ProfileMenuTile(
+                icon: Icons.language_outlined,
+                title: 'Language',
+                subtitle: 'English',
+                onTap: () {},
+              ),
+              const SizedBox(height: 28),
+              const ProfileSectionTitle('Account'),
+              const SizedBox(height: 12),
+              ProfileMenuTile(
+                icon: Icons.admin_panel_settings_outlined,
+                title: 'Switch to Administrator View',
+                onTap: () => Get.offNamed(AppRoutes.adminDashboard),
+              ),
+              const SizedBox(height: 12),
+              ProfileLogoutTile(onTap: _logout),
               const SizedBox(height: 20),
               const Center(
                 child: Text(
                   'SINI-GAN • Campus Room Booking',
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 11,
-                  ),
+                  style:
+                      TextStyle(color: AppColors.textSecondary, fontSize: 11),
                 ),
               ),
             ],
@@ -51,354 +141,60 @@ class StudentProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
-    return const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'My Profile',
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 26,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-        SizedBox(height: 6),
-        Text(
-          'Manage your account and preferences.',
-          style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildProfileCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.border),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.textPrimary.withValues(alpha: 0.04),
-            blurRadius: 18,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Column(
+  Widget _buildQuotaCard() {
+    return ProfileCard(
+      padding: const EdgeInsets.all(16),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 88,
-            height: 88,
-            decoration: BoxDecoration(
-              color: AppColors.lavender,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.2),
-                width: 3,
-              ),
-            ),
-            alignment: Alignment.center,
-            child: const Text(
-              'RP',
-              style: TextStyle(
-                color: AppColors.primary,
-                fontSize: 30,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-          const SizedBox(height: 14),
-          const Text(
-            'Raka Pratama',
+          Text(
+            'Monthly Booking Quota',
             style: TextStyle(
-              color: AppColors.textPrimary,
-              fontSize: 22,
-              fontWeight: FontWeight.w800,
+              color: AppColors.textSecondary,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: 6),
-          const Text(
-            'raka.pratama@student.telkomuniversity.ac.id',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
-          ),
-          const SizedBox(height: 22),
-          const Divider(color: AppColors.border),
-          const SizedBox(height: 16),
-          _buildInfoRow(
-            icon: Icons.badge_outlined,
-            label: 'Student ID',
-            value: '103022400032',
-          ),
-          const SizedBox(height: 18),
-          _buildInfoRow(
-            icon: Icons.school_outlined,
-            label: 'Program',
-            value: 'S1 Rekayasa Perangkat Lunak',
-          ),
-          const SizedBox(height: 18),
-          _buildInfoRow(
-            icon: Icons.verified_user_outlined,
-            label: 'Status',
-            value: 'Active Student',
-            valueColor: AppColors.success,
-          ),
-          const SizedBox(height: 22),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.background,
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Monthly Booking Quota',
+          SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '8',
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 5, left: 5),
+                child: Text(
+                  'of 10 bookings used',
                   style: TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 12,
-                    fontWeight: FontWeight.w600,
                   ),
-                ),
-                SizedBox(height: 12),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      '8',
-                      style: TextStyle(
-                        color: AppColors.primary,
-                        fontSize: 30,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 5, left: 5),
-                      child: Text(
-                        'of 10 bookings used',
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12),
-                ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  child: LinearProgressIndicator(
-                    value: 0.8,
-                    minHeight: 8,
-                    backgroundColor: AppColors.lavender,
-                    color: AppColors.primary,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  '2 bookings remaining this month',
-                  style: TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 11,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoRow({
-    required IconData icon,
-    required String label,
-    required String value,
-    Color valueColor = AppColors.textPrimary,
-  }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 38,
-          height: 38,
-          decoration: BoxDecoration(
-            color: AppColors.lavender,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          alignment: Alignment.center,
-          child: Icon(icon, size: 20, color: AppColors.primary),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 11,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                value,
-                style: TextStyle(
-                  color: valueColor,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        color: AppColors.textPrimary,
-        fontSize: 18,
-        fontWeight: FontWeight.w800,
-      ),
-    );
-  }
-
-  Widget _buildNotificationCard() {
-    return Material(
-      color: AppColors.surface,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-        side: const BorderSide(color: AppColors.border),
-      ),
-      child: SwitchListTile(
-        value: true,
-        onChanged: (value) {},
-        activeTrackColor: AppColors.primary,
-        secondary: const Icon(
-          Icons.notifications_active_outlined,
-          color: AppColors.primary,
-        ),
-        title: const Text(
-          'Booking Notifications',
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-            color: AppColors.textPrimary,
+          SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            child: LinearProgressIndicator(
+              value: 0.8,
+              minHeight: 8,
+              backgroundColor: AppColors.lavender,
+              color: AppColors.primary,
+            ),
           ),
-        ),
-        subtitle: const Text(
-          'Receive updates about your reservations',
-          style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPreferenceCard() {
-    return Material(
-      color: AppColors.surface,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-        side: const BorderSide(color: AppColors.border),
-      ),
-      child: ListTile(
-        leading: const Icon(Icons.language_outlined, color: AppColors.primary),
-        title: const Text(
-          'Language',
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-            color: AppColors.textPrimary,
+          SizedBox(height: 8),
+          Text(
+            '2 bookings remaining this month',
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
           ),
-        ),
-        subtitle: const Text(
-          'English',
-          style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
-        ),
-        trailing: const Icon(
-          Icons.chevron_right,
-          color: AppColors.textSecondary,
-        ),
-        onTap: () {
-          // Pengaturan bahasa dapat ditambahkan nanti.
-        },
-      ),
-    );
-  }
-
-  Widget _buildAdminButton(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton.icon(
-        onPressed: () => Get.offNamed(AppRoutes.adminDashboard),
-        icon: const Icon(Icons.admin_panel_settings_outlined),
-        label: const Text('Switch to Campus Administrator View'),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.primary,
-          side: const BorderSide(color: AppColors.border),
-          minimumSize: const Size.fromHeight(50),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLogoutButton(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton.icon(
-        onPressed: () async {
-          final shouldLogout = await showDialog<bool>(
-            context: context,
-            builder: (dialogContext) {
-              return AlertDialog(
-                title: const Text('Logout'),
-                content: const Text(
-                  'Apakah kamu yakin ingin keluar dari akun?',
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Get.back(result: false),
-                    child: const Text('Batal'),
-                  ),
-                  FilledButton(
-                    onPressed: () => Get.back(result: true),
-                    child: const Text('Logout'),
-                  ),
-                ],
-              );
-            },
-          );
-
-          if (shouldLogout != true || !context.mounted) return;
-
-          Get.offAllNamed(AppRoutes.login);
-        },
-        icon: const Icon(Icons.logout_rounded),
-        label: const Text('Logout'),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.error,
-          side: const BorderSide(color: AppColors.error),
-          minimumSize: const Size.fromHeight(50),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
+        ],
       ),
     );
   }

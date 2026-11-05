@@ -25,7 +25,7 @@ void main() {
     await tester.tap(find.text('Explore'));
     await tester.pumpAndSettle();
     expect(find.byType(RoomCatalogScreen), findsOneWidget);
-    expect(find.text('Katalog Ruangan'), findsOneWidget);
+    expect(find.text('Room Catalog'), findsOneWidget);
 
     // Open a room detail.
     await tester.tap(find.text('TULT-0701').first);

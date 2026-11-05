@@ -1,5 +1,6 @@
 // PIC: Rayazka - Booking Requests Screen - FR-13
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
@@ -87,12 +88,12 @@ List<Booking> _filterBookings(List<Booking> bookings) {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Permohonan Peminjaman'),
+        title: const Text('Booking Requests'),
         automaticallyImplyLeading: false,
       ),
-      body: AnimatedBuilder(
-        animation: _dataStore,
-        builder: (context, child) {
+      body: GetBuilder<MockDataStore>(
+        init: MockDataStore.instance,
+        builder: (_) {
           final bookings = _filterBookings(_dataStore.bookings);
 
           return Column(
@@ -118,7 +119,7 @@ List<Booking> _filterBookings(List<Booking> bookings) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
       child: Text(
-        'Tinjau dan kelola permohonan peminjaman ruangan.',
+        'Review and manage room booking requests.',
         style: AppTextStyles.body.copyWith(
           color: AppColors.textSecondary,
         ),
@@ -135,7 +136,7 @@ List<Booking> _filterBookings(List<Booking> bookings) {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
           _buildFilterChip(
-            label: 'Semua',
+            label: 'All',
             status: null,
           ),
           const SizedBox(width: 8),
@@ -205,8 +206,8 @@ List<Booking> _filterBookings(List<Booking> bookings) {
   /// Menampilkan tampilan ketika hasil filter kosong.
   Widget _buildEmptyState() {
     final filterLabel = _selectedStatus == null
-        ? 'permohonan'
-        : 'permohonan ${_selectedStatus!.label.toLowerCase()}';
+        ? 'requests'
+        : '${_selectedStatus!.label.toLowerCase()} requests';
 
     return Center(
       child: Padding(
@@ -221,13 +222,13 @@ List<Booking> _filterBookings(List<Booking> bookings) {
             ),
             const SizedBox(height: 16),
             Text(
-              'Tidak ada $filterLabel',
+              'No $filterLabel',
               textAlign: TextAlign.center,
               style: AppTextStyles.sectionTitle,
             ),
             const SizedBox(height: 8),
             Text(
-              'Belum ada data permohonan yang sesuai dengan filter ini.',
+              'No requests match this filter.',
               textAlign: TextAlign.center,
               style: AppTextStyles.body.copyWith(
                 color: AppColors.textSecondary,
@@ -239,4 +240,3 @@ List<Booking> _filterBookings(List<Booking> bookings) {
     );
   }
 }
-

@@ -11,7 +11,6 @@ import '../../../data/mock_data_store.dart';
 import '../../../models/blackout_period.dart';
 import '../../../models/regular_schedule.dart';
 import '../../../models/room.dart';
-import '../../auth/screens/login_screen.dart';
 
 /// Layar Pengelolaan Jadwal Perkuliahan Reguler (FR-11)
 /// dan Pemblokiran Tanggal Nonaktif / Blackout Dates (FR-12).
@@ -50,37 +49,6 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
     super.dispose();
   }
 
-  void _logout() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Konfirmasi Logout'),
-        content: const Text('Apakah Anda yakin ingin keluar dari akun admin?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Batal'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pop(ctx);
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => const LoginScreen()),
-                (route) => false,
-              );
-            },
-            child: const Text('Logout'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MockDataStore>(
@@ -99,7 +67,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Jadwal & Blokir Tanggal',
+                  'Schedule & Date Blocks',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -107,19 +75,12 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                   ),
                 ),
                 Text(
-                  'Kelola jadwal reguler kuliah & pemblokiran ruangan',
+                  'Manage class schedules & room blackout dates',
                   style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
                 ),
               ],
             ),
             automaticallyImplyLeading: false,
-            actions: [
-              IconButton(
-                tooltip: 'Keluar',
-                onPressed: _logout,
-                icon: const Icon(Icons.logout, color: AppColors.textSecondary),
-              ),
-            ],
             bottom: TabBar(
               controller: _tabController,
               indicatorColor: AppColors.primary,
@@ -130,11 +91,11 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
               tabs: [
                 Tab(
                   icon: const Icon(Icons.calendar_today_outlined, size: 20),
-                  text: 'Jadwal Kuliah (${regularSchedules.length})',
+                  text: 'Class Schedules (${regularSchedules.length})',
                 ),
                 Tab(
                   icon: const Icon(Icons.block_outlined, size: 20),
-                  text: 'Blokir Tanggal (${blackoutPeriods.length})',
+                  text: 'Date Blocks (${blackoutPeriods.length})',
                 ),
               ],
             ),
@@ -156,7 +117,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
               size: 20,
             ),
             label: Text(
-              _tabController.index == 0 ? 'Tambah Jadwal' : 'Blokir Tanggal',
+              _tabController.index == 0 ? 'Add Schedule' : 'Block Dates',
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
             onPressed: () {
@@ -196,13 +157,13 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
     });
 
     final days = [
-      {'name': 'Semua Hari', 'value': null},
-      {'name': 'Senin', 'value': 1},
-      {'name': 'Selasa', 'value': 2},
-      {'name': 'Rabu', 'value': 3},
-      {'name': 'Kamis', 'value': 4},
-      {'name': 'Jumat', 'value': 5},
-      {'name': 'Sabtu', 'value': 6},
+      {'name': 'All Days', 'value': null},
+      {'name': 'Monday', 'value': 1},
+      {'name': 'Tuesday', 'value': 2},
+      {'name': 'Wednesday', 'value': 3},
+      {'name': 'Thursday', 'value': 4},
+      {'name': 'Friday', 'value': 5},
+      {'name': 'Saturday', 'value': 6},
     ];
 
     return Column(
@@ -230,7 +191,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                       children: [
                         Icon(Icons.meeting_room_outlined, size: 18, color: AppColors.primary),
                         SizedBox(width: 8),
-                        Text('Semua Ruangan Kampus', style: AppTextStyles.body),
+                        Text('All Campus Rooms', style: AppTextStyles.body),
                       ],
                     ),
                     items: [
@@ -240,7 +201,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                           children: [
                             Icon(Icons.clear_all, size: 18, color: AppColors.textSecondary),
                             SizedBox(width: 8),
-                            Text('Semua Ruangan Kampus', style: AppTextStyles.body),
+                            Text('All Campus Rooms', style: AppTextStyles.body),
                           ],
                         ),
                       ),
@@ -321,7 +282,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Menampilkan ${filteredSchedules.length} jadwal perkuliahan',
+                'Showing ${filteredSchedules.length} class schedules',
                 style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.w600),
               ),
               if (_selectedDayFilter != null || _selectedRoomFilter != null)
@@ -333,7 +294,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                     });
                   },
                   child: const Text(
-                    'Reset Filter',
+                    'Reset Filters',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -350,11 +311,11 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
           child: filteredSchedules.isEmpty
               ? _buildEmptyState(
                   icon: Icons.event_note_outlined,
-                  title: 'Tidak Ada Jadwal Perkuliahan',
+                  title: 'No Class Schedules',
                   subtitle: _selectedDayFilter != null || _selectedRoomFilter != null
-                      ? 'Tidak ada jadwal yang cocok dengan filter yang dipilih.'
-                      : 'Belum ada jadwal perkuliahan reguler yang terdaftar.',
-                  actionLabel: 'Tambah Jadwal Baru',
+                      ? 'No schedules match the selected filter.'
+                      : 'No regular class schedules have been added yet.',
+                  actionLabel: 'Add New Schedule',
                   onAction: () => _showAddScheduleDialog(rooms),
                 )
               : ListView.builder(
@@ -433,7 +394,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
 
                 // Toggle Switch Status Keaktifan
                 Tooltip(
-                  message: item.isActive ? 'Nonaktifkan Jadwal' : 'Aktifkan Jadwal',
+                  message: item.isActive ? 'Deactivate Schedule' : 'Activate Schedule',
                   child: Switch(
                     value: item.isActive,
                     activeThumbColor: AppColors.primary,
@@ -446,7 +407,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
 
                 // Delete Button
                 IconButton(
-                  tooltip: 'Hapus Jadwal',
+                  tooltip: 'Delete Schedule',
                   icon: const Icon(Icons.delete_outline, color: AppColors.error, size: 20),
                   onPressed: () => _confirmDeleteSchedule(item),
                   constraints: const BoxConstraints(),
@@ -539,19 +500,23 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
               children: [
                 const Icon(Icons.school_outlined, size: 16, color: AppColors.textSecondary),
                 const SizedBox(width: 6),
-                Text(
-                  'Semester ${item.semester}',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
+                Expanded(
+                  child: Text(
+                    'Semester ${item.semester}',
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ),
-                const Spacer(),
-                if (!item.isActive)
+                if (!item.isActive) ...[
+                  const SizedBox(width: 8),
                   const StatusBadge(
                     status: 'inactive',
-                    customLabel: 'Jadwal Libur/Nonaktif',
+                    customLabel: 'Inactive / Holiday Schedule',
                   ),
+                ],
               ],
             ),
           ],
@@ -597,7 +562,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                     SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        'Periode pemblokiran menonaktifkan ruangan secara otomatis agar tidak dapat dipinjam oleh mahasiswa (misal: UTS, UAS, Maintenance, atau Libur Kampus).',
+                        'Blackout periods automatically disable a room so students cannot book it (e.g. midterms, finals, maintenance, or campus holidays).',
                         style: TextStyle(
                           fontSize: 12,
                           color: AppColors.textPrimary,
@@ -614,19 +579,19 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
               Row(
                 children: [
                   _buildFilterTabChip(
-                    label: 'Semua (${blackoutPeriods.length})',
+                    label: 'All (${blackoutPeriods.length})',
                     isSelected: _blackoutFilter == 'all',
                     onTap: () => setState(() => _blackoutFilter = 'all'),
                   ),
                   const SizedBox(width: 8),
                   _buildFilterTabChip(
-                    label: 'Aktif ($activeCount)',
+                    label: 'Active ($activeCount)',
                     isSelected: _blackoutFilter == 'active',
                     onTap: () => setState(() => _blackoutFilter = 'active'),
                   ),
                   const SizedBox(width: 8),
                   _buildFilterTabChip(
-                    label: 'Nonaktif ($inactiveCount)',
+                    label: 'Inactive ($inactiveCount)',
                     isSelected: _blackoutFilter == 'inactive',
                     onTap: () => setState(() => _blackoutFilter = 'inactive'),
                   ),
@@ -641,11 +606,11 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
           child: filteredBlackouts.isEmpty
               ? _buildEmptyState(
                   icon: Icons.event_busy_outlined,
-                  title: 'Tidak Ada Pemblokiran Tanggal',
+                  title: 'No Date Blocks',
                   subtitle: _blackoutFilter != 'all'
-                      ? 'Tidak ada pemblokiran dengan status yang dipilih.'
-                      : 'Belum ada tanggal pemblokiran nonaktif yang ditambahkan.',
-                  actionLabel: 'Tambah Pemblokiran Baru',
+                      ? 'No blackouts with the selected status.'
+                      : 'No inactive blackout dates have been added.',
+                  actionLabel: 'Add New Blackout',
                   onAction: () => _showAddBlackoutDialog(rooms),
                 )
               : ListView.builder(
@@ -710,7 +675,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
               children: [
                 StatusBadge(
                   status: item.isActive ? 'active' : 'inactive',
-                  customLabel: item.isActive ? 'Aktif Berjalan' : 'Nonaktif',
+                  customLabel: item.isActive ? 'Active' : 'Inactive',
                 ),
                 const SizedBox(width: 8),
 
@@ -782,7 +747,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      '${DateTimeUtils.formatDate(item.startDate)}  s/d  ${DateTimeUtils.formatDate(item.endDate)}',
+                      '${DateTimeUtils.formatDate(item.startDate)} to ${DateTimeUtils.formatDate(item.endDate)}',
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -832,7 +797,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                   onPressed: () => _confirmDeleteBlackout(item),
                   icon: const Icon(Icons.delete_outline, size: 16),
                   label: const Text(
-                    'Batalkan & Hapus',
+                    'Cancel & Delete',
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -851,7 +816,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
   void _showAddScheduleDialog(List<Room> rooms) {
     if (rooms.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tidak ada ruangan yang tersedia')),
+        const SnackBar(content: Text('No rooms available')),
       );
       return;
     }
@@ -866,7 +831,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
     final courseNameCtrl = TextEditingController();
     final lecturerCtrl = TextEditingController();
     final classGroupCtrl = TextEditingController(text: 'SE-48-01');
-    final semesterCtrl = TextEditingController(text: 'Genap 2024/2025');
+    final semesterCtrl = TextEditingController(text: 'Even Semester 2024/2025');
 
     showDialog(
       context: context,
@@ -894,7 +859,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                   const SizedBox(width: 12),
                   const Expanded(
                     child: Text(
-                      'Tambah Jadwal Reguler',
+                      'Add Regular Schedule',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                     ),
                   ),
@@ -910,7 +875,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Pilih Ruangan Perkuliahan *',
+                          'Select Class Room *',
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: 6),
@@ -943,7 +908,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    'Hari *',
+                                    'Day *',
                                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                                   ),
                                   const SizedBox(height: 6),
@@ -954,12 +919,12 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                                       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
                                     items: const [
-                                      DropdownMenuItem(value: 1, child: Text('Senin')),
-                                      DropdownMenuItem(value: 2, child: Text('Selasa')),
-                                      DropdownMenuItem(value: 3, child: Text('Rabu')),
-                                      DropdownMenuItem(value: 4, child: Text('Kamis')),
-                                      DropdownMenuItem(value: 5, child: Text('Jumat')),
-                                      DropdownMenuItem(value: 6, child: Text('Sabtu')),
+                                      DropdownMenuItem(value: 1, child: Text('Monday')),
+                                      DropdownMenuItem(value: 2, child: Text('Tuesday')),
+                                      DropdownMenuItem(value: 3, child: Text('Wednesday')),
+                                      DropdownMenuItem(value: 4, child: Text('Thursday')),
+                                      DropdownMenuItem(value: 5, child: Text('Friday')),
+                                      DropdownMenuItem(value: 6, child: Text('Saturday')),
                                     ],
                                     onChanged: (val) {
                                       if (val != null) {
@@ -982,7 +947,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    'Jam Mulai *',
+                                    'Start Time *',
                                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                                   ),
                                   const SizedBox(height: 6),
@@ -1024,7 +989,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    'Jam Selesai *',
+                                    'End Time *',
                                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                                   ),
                                   const SizedBox(height: 6),
@@ -1066,19 +1031,19 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
 
                         // Nama Mata Kuliah
                         const Text(
-                          'Nama Mata Kuliah *',
+                          'Course Name *',
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: 6),
                         TextFormField(
                           controller: courseNameCtrl,
                           decoration: InputDecoration(
-                            hintText: 'misal: Pemrograman Aplikasi Bergerak',
+                            hintText: 'e.g. Mobile Application Programming',
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                           ),
                           validator: (val) =>
-                              val == null || val.trim().isEmpty ? 'Nama mata kuliah wajib diisi' : null,
+                              val == null || val.trim().isEmpty ? 'Course name is required' : null,
                         ),
                         const SizedBox(height: 14),
 
@@ -1091,7 +1056,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    'Kode MK *',
+                                    'Course Code *',
                                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                                   ),
                                   const SizedBox(height: 6),
@@ -1103,7 +1068,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                                       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
                                     validator: (val) =>
-                                        val == null || val.trim().isEmpty ? 'Wajib diisi' : null,
+                                        val == null || val.trim().isEmpty ? 'Required' : null,
                                   ),
                                 ],
                               ),
@@ -1115,7 +1080,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    'Kelas / Kelompok *',
+                                    'Class / Group *',
                                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                                   ),
                                   const SizedBox(height: 6),
@@ -1127,7 +1092,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                                       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                                     ),
                                     validator: (val) =>
-                                        val == null || val.trim().isEmpty ? 'Wajib diisi' : null,
+                                        val == null || val.trim().isEmpty ? 'Required' : null,
                                   ),
                                 ],
                               ),
@@ -1138,32 +1103,32 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
 
                         // Dosen Pengampu
                         const Text(
-                          'Dosen Pengampu *',
+                          'Lecturer *',
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: 6),
                         TextFormField(
                           controller: lecturerCtrl,
                           decoration: InputDecoration(
-                            hintText: 'Nama lengkap beserta gelar dosen',
+                            hintText: 'Lecturer full name with title',
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                           ),
                           validator: (val) =>
-                              val == null || val.trim().isEmpty ? 'Nama dosen pengampu wajib diisi' : null,
+                              val == null || val.trim().isEmpty ? 'Lecturer name is required' : null,
                         ),
                         const SizedBox(height: 14),
 
                         // Semester
                         const Text(
-                          'Semester Perkuliahan *',
+                          'Semester *',
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: 6),
                         TextFormField(
                           controller: semesterCtrl,
                           decoration: InputDecoration(
-                            hintText: 'Genap 2024/2025',
+                            hintText: 'Even Semester 2024/2025',
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                           ),
@@ -1176,7 +1141,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(ctx),
-                  child: const Text('Batal', style: TextStyle(color: AppColors.textSecondary)),
+                  child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -1198,7 +1163,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                         startTime: DateTimeUtils.formatTime(startTime),
                         endTime: DateTimeUtils.formatTime(endTime),
                         semester: semesterCtrl.text.trim().isEmpty
-                            ? 'Genap 2024/2025'
+                            ? 'Even Semester 2024/2025'
                             : semesterCtrl.text.trim(),
                         isActive: true,
                       );
@@ -1209,12 +1174,12 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           backgroundColor: AppColors.success,
-                          content: Text('Jadwal "${newSchedule.courseName}" berhasil disimpan'),
+                          content: Text('Schedule "${newSchedule.courseName}" saved'),
                         ),
                       );
                     }
                   },
-                  child: const Text('Simpan Jadwal'),
+                  child: const Text('Save Schedule'),
                 ),
               ],
             );
@@ -1228,14 +1193,14 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Hapus Jadwal Perkuliahan?'),
+        title: const Text('Delete Class Schedule?'),
         content: Text(
-          'Apakah Anda yakin ingin menghapus jadwal perkuliahan "${item.courseName}" (${item.dayName}, ${item.timeRange}) pada ruangan ${item.roomName}?',
+          'Are you sure you want to delete the class "${item.courseName}" (${item.dayName}, ${item.timeRange}) in room ${item.roomName}?',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Batal'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -1252,7 +1217,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                 ),
               );
             },
-            child: const Text('Hapus Jadwal'),
+            child: const Text('Delete Schedule'),
           ),
         ],
       ),
@@ -1275,7 +1240,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
 
     final titleCtrl = TextEditingController();
     final reasonCtrl = TextEditingController();
-    final createdByCtrl = TextEditingController(text: 'Biro Administrasi Akademik (BAA)');
+    final createdByCtrl = TextEditingController(text: 'Academic Administration Bureau (BAA)');
 
     showDialog(
       context: context,
@@ -1298,7 +1263,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                   const SizedBox(width: 12),
                   const Expanded(
                     child: Text(
-                      'Pemblokiran Tanggal',
+                      'Date Blackout',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                     ),
                   ),
@@ -1315,7 +1280,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                       children: [
                         // Cakupan Ruangan
                         const Text(
-                          'Cakupan Ruangan yang Diblokir *',
+                          'Blocked Room Scope *',
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: 8),
@@ -1348,7 +1313,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
-                                        'Semua Ruangan',
+                                        'All Rooms',
                                         style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: appliesToAllRooms ? FontWeight.w700 : FontWeight.w500,
@@ -1386,7 +1351,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
-                                        'Ruangan Khusus',
+                                        'Specific Rooms',
                                         style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: !appliesToAllRooms ? FontWeight.w700 : FontWeight.w500,
@@ -1405,7 +1370,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                         // Dropdown bila Ruangan Khusus
                         if (!appliesToAllRooms) ...[
                           const Text(
-                            'Pilih Ruangan Spesifik *',
+                            'Select Specific Room *',
                             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                           ),
                           const SizedBox(height: 6),
@@ -1432,25 +1397,25 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
 
                         // Judul Periode Pemblokiran
                         const Text(
-                          'Judul Agenda / Alasan Pemblokiran *',
+                          'Agenda Title / Blackout Reason *',
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: 6),
                         TextFormField(
                           controller: titleCtrl,
                           decoration: InputDecoration(
-                            hintText: 'misal: Pekan UTS Genap 2024/2025',
+                            hintText: 'e.g. Midterm Week 2024/2025',
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                           ),
                           validator: (val) =>
-                              val == null || val.trim().isEmpty ? 'Judul pemblokiran wajib diisi' : null,
+                              val == null || val.trim().isEmpty ? 'Blackout title is required' : null,
                         ),
                         const SizedBox(height: 14),
 
                         // Pemilihan Rentang Tanggal
                         const Text(
-                          'Rentang Tanggal Nonaktif *',
+                          'Blackout Date Range *',
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: 6),
@@ -1462,9 +1427,9 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                               firstDate: DateTime(2025, 1, 1),
                               lastDate: DateTime(2027, 12, 31),
                               initialDateRange: selectedDateRange,
-                              helpText: 'Pilih Rentang Tanggal Pemblokiran',
-                              confirmText: 'Pilih',
-                              cancelText: 'Batal',
+                              helpText: 'Select Blackout Date Range',
+                              confirmText: 'Select',
+                              cancelText: 'Cancel',
                             );
                             if (picked != null) {
                               setDialogState(() => selectedDateRange = picked);
@@ -1496,7 +1461,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
 
                         // Alasan Detail
                         const Text(
-                          'Deskripsi / Catatan Kebijakan *',
+                          'Description / Policy Notes *',
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: 6),
@@ -1504,25 +1469,25 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                           controller: reasonCtrl,
                           maxLines: 3,
                           decoration: InputDecoration(
-                            hintText: 'Jelaskan mengapa ruangan dinonaktifkan untuk peminjaman...',
+                            hintText: 'Explain why the room is disabled for booking...',
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                             contentPadding: const EdgeInsets.all(12),
                           ),
                           validator: (val) =>
-                              val == null || val.trim().isEmpty ? 'Deskripsi alasan wajib diisi' : null,
+                              val == null || val.trim().isEmpty ? 'Reason description is required' : null,
                         ),
                         const SizedBox(height: 14),
 
                         // Unit Pembuat Kebijakan
                         const Text(
-                          'Ditetapkan Oleh / Unit *',
+                          'Issued By / Unit *',
                           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: 6),
                         TextFormField(
                           controller: createdByCtrl,
                           decoration: InputDecoration(
-                            hintText: 'Biro Administrasi Akademik (BAA)',
+                            hintText: 'Academic Administration Bureau (BAA)',
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                           ),
@@ -1535,7 +1500,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(ctx),
-                  child: const Text('Batal', style: TextStyle(color: AppColors.textSecondary)),
+                  child: const Text('Cancel', style: TextStyle(color: AppColors.textSecondary)),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -1545,7 +1510,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                   ),
                   onPressed: () {
                     if (formKey.currentState?.validate() ?? false) {
-                      String roomName = 'Semua Ruangan Kampus';
+                      String roomName = 'All Campus Rooms';
                       if (!appliesToAllRooms && selectedRoomId != null) {
                         final foundRoom = rooms.firstWhere(
                           (r) => r.id == selectedRoomId,
@@ -1564,7 +1529,7 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                         endDate: selectedDateRange.end,
                         isActive: true,
                         createdBy: createdByCtrl.text.trim().isEmpty
-                            ? 'Biro Administrasi Akademik (BAA)'
+                            ? 'Academic Administration Bureau (BAA)'
                             : createdByCtrl.text.trim(),
                       );
 
@@ -1574,12 +1539,12 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           backgroundColor: AppColors.success,
-                          content: Text('Periode pemblokiran "${newBlackout.title}" berhasil disimpan'),
+                          content: Text('Blackout period "${newBlackout.title}" saved'),
                         ),
                       );
                     }
                   },
-                  child: const Text('Simpan Pemblokiran'),
+                  child: const Text('Save Blackout'),
                 ),
               ],
             );
@@ -1593,14 +1558,14 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Batalkan & Hapus Pemblokiran?'),
+        title: const Text('Cancel & Delete Blackout?'),
         content: Text(
-          'Periode pemblokiran "${item.title}" akan dihapus dari sistem. Mahasiswa akan dapat kembali mengajukan peminjaman pada ruangan dan rentang tanggal tersebut.',
+          'The blackout period "${item.title}" will be removed. Students will be able to book that room and date range again.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Tutup'),
+            child: const Text('Close'),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -1613,11 +1578,11 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: AppColors.error,
-                  content: Text('Pemblokiran "${item.title}" berhasil dibatalkan dan dihapus'),
+                  content: Text('Blackout "${item.title}" cancelled and deleted'),
                 ),
               );
             },
-            child: const Text('Batalkan & Hapus'),
+            child: const Text('Cancel & Delete'),
           ),
         ],
       ),
