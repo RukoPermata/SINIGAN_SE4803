@@ -275,11 +275,12 @@ class StudentProfileScreen extends StatelessWidget {
   }
 
   Widget _buildNotificationCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
+    return Material(
+      color: AppColors.surface,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.border),
+        side: const BorderSide(color: AppColors.border),
       ),
       child: SwitchListTile(
         value: true,
@@ -306,11 +307,12 @@ class StudentProfileScreen extends StatelessWidget {
   }
 
   Widget _buildPreferenceCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
+    return Material(
+      color: AppColors.surface,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.border),
+        side: const BorderSide(color: AppColors.border),
       ),
       child: ListTile(
         leading: const Icon(Icons.language_outlined, color: AppColors.primary),
