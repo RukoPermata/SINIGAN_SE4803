@@ -70,7 +70,7 @@ final List<Booking> mockBookings = [
     roomName: 'TULT-1102',
     building: 'Gedung TULT',
     userName: 'Raka Pratama',
-    userNim: '103022400110',
+    userNim: '103022400032',
     date: DateTime.now().subtract(const Duration(days: 2)),
     startTime: '14:00',
     endTime: '16:00',

@@ -75,4 +75,40 @@ class Room {
       locationNotes: locationNotes ?? this.locationNotes,
     );
   }
+
+  /// Serialisasi entitas ke Map agar dapat disimpan sebagai JSON lokal.
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'building': building,
+      'floor': floor,
+      'capacity': capacity,
+      'facilities': facilities,
+      'imageUrl': imageUrl,
+      'isActive': isActive,
+      'targetLayout': targetLayout,
+      'description': description,
+      'locationNotes': locationNotes,
+    };
+  }
+
+  /// Membuat entitas Room dari Map hasil dekode JSON.
+  factory Room.fromJson(Map<String, dynamic> json) {
+    return Room(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      building: json['building'] as String,
+      floor: (json['floor'] as num).toInt(),
+      capacity: (json['capacity'] as num).toInt(),
+      facilities: (json['facilities'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      imageUrl: json['imageUrl'] as String? ?? '',
+      isActive: json['isActive'] as bool? ?? true,
+      targetLayout: json['targetLayout'] as String? ?? 'Standar',
+      description: json['description'] as String? ?? '',
+      locationNotes: json['locationNotes'] as String? ?? '',
+    );
+  }
 }
