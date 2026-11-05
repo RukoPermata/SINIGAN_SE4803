@@ -1,8 +1,8 @@
 // PIC: Kaisar - Room Condition Screen (Queue List) - FR-15, FR-16, FR-17, FR-18
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-import '../../auth/screens/login_screen.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../data/mock_data_store.dart';
 import '../../../models/booking.dart';
@@ -35,64 +35,57 @@ class _RoomConditionScreenState extends State<RoomConditionScreen> {
     }
   }
 
-  void _logout() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
-      (route) => false,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    final allBookings = MockDataStore.instance.bookings;
+    return GetBuilder<MockDataStore>(
+      init: MockDataStore.instance,
+      builder: (store) {
+        final allBookings = store.bookings;
 
-    final pendingReview = allBookings
-        .where((b) => !_verifiedIds.contains(b.id))
-        .toList();
+        final pendingReview = allBookings
+            .where((b) => !_verifiedIds.contains(b.id))
+            .toList();
 
-    final completedReview = allBookings
-        .where((b) => _verifiedIds.contains(b.id))
-        .toList();
+        final completedReview = allBookings
+            .where((b) => _verifiedIds.contains(b.id))
+            .toList();
 
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Tinjauan Kondisi Ruangan'),
-          automaticallyImplyLeading: false,
-          actions: [
-            IconButton(
-              tooltip: 'Logout',
-              onPressed: _logout,
-              icon: const Icon(Icons.logout),
+        return DefaultTabController(
+          length: 2,
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text('Tinjauan Kondisi Ruangan'),
+              automaticallyImplyLeading: false,
+              bottom: TabBar(
+                indicatorColor: AppColors.primary,
+                labelColor: AppColors.primary,
+                unselectedLabelColor: AppColors.textSecondary,
+                tabs: [
+                  Tab(text: 'Perlu Verifikasi (${pendingReview.length})'),
+                  Tab(text: 'Selesai (${completedReview.length})'),
+                ],
+              ),
             ),
-          ],
-          bottom: TabBar(
-            indicatorColor: AppColors.primary,
-            labelColor: AppColors.primary,
-            unselectedLabelColor: AppColors.textSecondary,
-            tabs: [
-              Tab(text: 'Perlu Verifikasi (${pendingReview.length})'),
-              Tab(text: 'Selesai (${completedReview.length})'),
-            ],
+            body: TabBarView(
+              children: [
+                _buildBookingList(
+                  items: pendingReview,
+                  isCompleted: false,
+                  emptyMessage:
+                      'Tidak ada sesi ruangan yang memerlukan verifikasi saat ini.',
+                ),
+                _buildBookingList(
+                  items: completedReview,
+                  isCompleted: true,
+                  emptyMessage:
+                      'Belum ada sesi peminjaman yang diverifikasi.',
+                ),
+              ],
+            ),
           ),
-        ),
-        body: TabBarView(
-          children: [
-            _buildBookingList(
-              items: pendingReview,
-              isCompleted: false,
-              emptyMessage: 'Tidak ada sesi ruangan yang memerlukan verifikasi saat ini.',
-            ),
-            _buildBookingList(
-              items: completedReview,
-              isCompleted: true,
-              emptyMessage: 'Belum ada sesi peminjaman yang diverifikasi.',
-            ),
-          ],
-        ),
-      ),
+        );
+      },
     );
   }
 
