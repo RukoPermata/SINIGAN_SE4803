@@ -24,8 +24,8 @@ class RoomManagementScreen extends StatefulWidget {
 class _RoomManagementScreenState extends State<RoomManagementScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  String _statusFilter = 'Semua'; // 'Semua', 'Aktif', 'Nonaktif'
-  String _buildingFilter = 'Semua'; // 'Semua' atau nama gedung tertentu
+  String _statusFilter = 'All'; // 'All', 'Active', 'Inactive'
+  String _buildingFilter = 'All'; // 'All' atau nama gedung tertentu
 
   @override
   void dispose() {
@@ -53,7 +53,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
             MockDataStore.instance.updateRoom(savedRoom);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Ruangan ${savedRoom.name} berhasil diperbarui.'),
+                content: Text('Room ${savedRoom.name} updated.'),
                 backgroundColor: AppColors.success,
               ),
             );
@@ -61,7 +61,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
             MockDataStore.instance.addRoom(savedRoom);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Ruangan ${savedRoom.name} berhasil ditambahkan.'),
+                content: Text('Room ${savedRoom.name} added.'),
                 backgroundColor: AppColors.success,
               ),
             );
@@ -75,14 +75,14 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Hapus Ruangan?'),
+        title: const Text('Delete Room?'),
         content: Text(
-          'Apakah Anda yakin ingin menghapus "${room.name}" (${room.building}) dari master data ruangan?',
+          'Are you sure you want to delete "${room.name}" (${room.building}) from the room master data?',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Batal'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -94,7 +94,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
               Navigator.pop(ctx);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Ruangan ${room.name} berhasil dihapus.'),
+                  content: Text('Room ${room.name} deleted.'),
                   backgroundColor: AppColors.textPrimary,
                 ),
               );
@@ -110,11 +110,11 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Manajemen Ruangan'),
+        title: const Text('Room Management'),
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            tooltip: 'Tambah Ruangan',
+            tooltip: 'Add Room',
             icon: const Icon(Icons.add_circle_outline, color: AppColors.primary),
             onPressed: () => _showRoomFormModal(),
           ),
@@ -131,7 +131,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add),
         label: const Text(
-          'Tambah Ruangan',
+          'Add Room',
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         onPressed: () => _showRoomFormModal(),
@@ -147,7 +147,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
           final inactiveRooms = allRooms.where((r) => !r.isActive).length;
 
           // Ambil daftar gedung unik untuk filter dropdown
-          final buildings = <String>{'Semua'};
+          final buildings = <String>{'All'};
           for (final r in allRooms) {
             buildings.add(r.building);
           }
@@ -155,11 +155,11 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
           // Terapkan filter dan pencarian
           final filteredRooms = allRooms.where((r) {
             // Filter status
-            if (_statusFilter == 'Aktif' && !r.isActive) return false;
-            if (_statusFilter == 'Nonaktif' && r.isActive) return false;
+            if (_statusFilter == 'Active' && !r.isActive) return false;
+            if (_statusFilter == 'Inactive' && r.isActive) return false;
 
             // Filter gedung
-            if (_buildingFilter != 'Semua' && r.building != _buildingFilter) {
+            if (_buildingFilter != 'All' && r.building != _buildingFilter) {
               return false;
             }
 
@@ -217,19 +217,19 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Daftar Ruangan (${filteredRooms.length})',
+                        'Room List (${filteredRooms.length})',
                         style: AppTextStyles.cardTitle.copyWith(fontSize: 15),
                       ),
                       if (_searchQuery.isNotEmpty ||
-                          _statusFilter != 'Semua' ||
-                          _buildingFilter != 'Semua')
+                          _statusFilter != 'All' ||
+                          _buildingFilter != 'All')
                         InkWell(
                           onTap: () {
                             setState(() {
                               _searchController.clear();
                               _searchQuery = '';
-                              _statusFilter = 'Semua';
-                              _buildingFilter = 'Semua';
+                              _statusFilter = 'All';
+                              _buildingFilter = 'All';
                             });
                           },
                           child: const Text(
@@ -285,7 +285,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
       children: [
         Expanded(
           child: _buildStatItem(
-            label: 'Total Ruang',
+            label: 'Total Rooms',
             count: total,
             icon: Icons.meeting_room_outlined,
             bgColor: AppColors.lavender.withValues(alpha: 0.45),
@@ -295,7 +295,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
         const SizedBox(width: 8),
         Expanded(
           child: _buildStatItem(
-            label: 'Aktif',
+            label: 'Active',
             count: active,
             icon: Icons.check_circle_outline,
             bgColor: AppColors.successLight,
@@ -305,7 +305,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
         const SizedBox(width: 8),
         Expanded(
           child: _buildStatItem(
-            label: 'Nonaktif',
+            label: 'Inactive',
             count: inactive,
             icon: Icons.cancel_outlined,
             bgColor: AppColors.errorLight,
@@ -371,7 +371,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
         });
       },
       decoration: InputDecoration(
-        hintText: 'Cari nama ruangan, gedung, fasilitas...',
+        hintText: 'Search room name, building, facility...',
         hintStyle: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
         prefixIcon: const Icon(Icons.search, color: AppColors.textSecondary, size: 20),
         suffixIcon: _searchController.text.isNotEmpty
@@ -414,11 +414,11 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              _buildStatusChip('Semua'),
+              _buildStatusChip('All'),
               const SizedBox(width: 8),
-              _buildStatusChip('Aktif'),
+              _buildStatusChip('Active'),
               const SizedBox(width: 8),
-              _buildStatusChip('Nonaktif'),
+              _buildStatusChip('Inactive'),
             ],
           ),
         ),
@@ -435,7 +435,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
             child: DropdownButton<String>(
               value: availableBuildings.contains(_buildingFilter)
                   ? _buildingFilter
-                  : 'Semua',
+                  : 'All',
               isExpanded: true,
               icon: const Icon(Icons.apartment, size: 20, color: AppColors.primary),
               style: const TextStyle(
@@ -447,7 +447,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
                 return DropdownMenuItem<String>(
                   value: building,
                   child: Text(
-                    building == 'Semua' ? '🏢 Semua Gedung Kampus' : '🏢 $building',
+                    building == 'All' ? '🏢 All Campus Buildings' : '🏢 $building',
                   ),
                 );
               }).toList(),
@@ -470,10 +470,10 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
     Color activeBg;
     Color activeText;
 
-    if (status == 'Aktif') {
+    if (status == 'Active') {
       activeBg = AppColors.successLight;
       activeText = AppColors.success;
-    } else if (status == 'Nonaktif') {
+    } else if (status == 'Inactive') {
       activeBg = AppColors.errorLight;
       activeText = AppColors.error;
     } else {
@@ -565,7 +565,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
                       ),
                       const SizedBox(height: 3),
                       Text(
-                        '${room.building} • Lantai ${room.floor}',
+                        '${room.building} • Floor ${room.floor}',
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.textSecondary,
@@ -581,7 +581,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            'Kapasitas: ${room.capacity} org',
+                            'Capacity: ${room.capacity} people',
                             style: const TextStyle(
                               fontSize: 11,
                               color: AppColors.textSecondary,
@@ -716,8 +716,8 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
                           SnackBar(
                             content: Text(
                               val
-                                  ? 'Ruangan ${room.name} kini berstatus Aktif (dapat dipinjam).'
-                                  : 'Ruangan ${room.name} dinonaktifkan dari peminjaman.',
+                                  ? 'Room ${room.name} is now Active (bookable).'
+                                  : 'Room ${room.name} is now Inactive.',
                             ),
                             duration: const Duration(seconds: 2),
                             backgroundColor:
@@ -727,7 +727,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
                       },
                     ),
                     Text(
-                      room.isActive ? 'Aktif' : 'Nonaktif',
+                      room.isActive ? 'Active' : 'Inactive',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -763,7 +763,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
                 const SizedBox(width: 8),
                 // Tombol Hapus Ruangan
                 IconButton(
-                  tooltip: 'Hapus Ruangan',
+                  tooltip: 'Delete Room',
                   icon: const Icon(Icons.delete_outline, size: 18, color: AppColors.error),
                   onPressed: () => _confirmDeleteRoom(room),
                 ),
@@ -790,7 +790,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
             ),
             const SizedBox(height: 12),
             const Text(
-              'Ruangan Tidak Ditemukan',
+              'No Rooms Found',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -799,7 +799,7 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
             ),
             const SizedBox(height: 6),
             const Text(
-              'Tidak ada ruangan yang cocok dengan kata kunci atau filter yang Anda pilih.',
+              'No rooms match your keyword or filter.',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
             ),
@@ -813,11 +813,11 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
                 setState(() {
                   _searchController.clear();
                   _searchQuery = '';
-                  _statusFilter = 'Semua';
-                  _buildingFilter = 'Semua';
+                  _statusFilter = 'All';
+                  _buildingFilter = 'All';
                 });
               },
-              child: const Text('Reset Pencarian'),
+              child: const Text('Reset Search'),
             ),
           ],
         ),
@@ -855,13 +855,13 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
   late String _targetLayout;
   late bool _isActive;
 
-  final List<String> _layoutOptions = const ['Standar', 'Ujian', 'Diskusi', 'Seminar'];
+  final List<String> _layoutOptions = const ['Standard', 'Exam', 'Discussion', 'Seminar'];
   final List<String> _commonBuildings = const [
-    'Gedung TULT',
-    'Gedung Tokong Nanas (KU3)',
-    'Gedung Panambulai (FIF)',
-    'Gedung Student Center',
-    'Gedung Kuliah Bersama (GKB)',
+    'TULT Building',
+    'Tokong Nanas Building (KU3)',
+    'Panambulai Building (FIF)',
+    'Student Center Building',
+    'Common Lecture Building (GKB)',
   ];
 
   @override
@@ -872,14 +872,14 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
     _buildingController = TextEditingController(text: r?.building ?? _commonBuildings.first);
     _floorController = TextEditingController(text: r?.floor.toString() ?? '1');
     _capacityController = TextEditingController(text: r?.capacity.toString() ?? '40');
-    _facilitiesController = TextEditingController(text: r?.facilities.join(', ') ?? 'Proyektor HD, AC, Papan Tulis, Wi-Fi Eduroam');
+    _facilitiesController = TextEditingController(text: r?.facilities.join(', ') ?? 'HD Projector, AC, Whiteboard, Wi-Fi Eduroam');
     _imageUrlController = TextEditingController(
       text: r?.imageUrl ??
           'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80',
     );
     _locationNotesController = TextEditingController(text: r?.locationNotes ?? '');
     _descriptionController = TextEditingController(text: r?.description ?? '');
-    _targetLayout = r?.targetLayout ?? 'Standar';
+    _targetLayout = r?.targetLayout ?? 'Standard';
     _isActive = r?.isActive ?? true;
   }
 
@@ -911,7 +911,7 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
       building: _buildingController.text.trim(),
       floor: int.tryParse(_floorController.text.trim()) ?? 1,
       capacity: int.tryParse(_capacityController.text.trim()) ?? 40,
-      facilities: facilities.isNotEmpty ? facilities : ['AC', 'Papan Tulis'],
+      facilities: facilities.isNotEmpty ? facilities : ['AC', 'Whiteboard'],
       imageUrl: _imageUrlController.text.trim().isNotEmpty
           ? _imageUrlController.text.trim()
           : 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80',
@@ -965,7 +965,7 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      isEdit ? 'Edit Ruangan Kampus' : 'Tambah Ruangan Baru',
+                      isEdit ? 'Edit Room' : 'Add New Room',
                       style: AppTextStyles.cardTitle.copyWith(fontSize: 18),
                     ),
                     IconButton(
@@ -977,8 +977,8 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                 const SizedBox(height: 4),
                 Text(
                   isEdit
-                      ? 'Perbarui detail data master ruangan dan status keaktifan.'
-                      : 'Lengkapi data master ruangan untuk dimasukkan ke katalog kampus.',
+                      ? 'Update the room details and availability status.'
+                      : 'Fill in the room details to add it to the campus catalog.',
                   style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
                 ),
                 const SizedBox(height: 20),
@@ -987,11 +987,11 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                 TextFormField(
                   controller: _nameController,
                   decoration: const InputDecoration(
-                    labelText: 'Nama / Kode Ruangan *',
-                    hintText: 'Contoh: TULT-0801 atau Lab Multimedia 2',
+                    labelText: 'Room Name / Code *',
+                    hintText: 'e.g. TULT-0801 or Multimedia Lab 2',
                   ),
                   validator: (v) => (v == null || v.trim().isEmpty)
-                      ? 'Nama ruangan wajib diisi'
+                      ? 'Room name is required'
                       : null,
                 ),
                 const SizedBox(height: 14),
@@ -1003,7 +1003,7 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                       ? _buildingController.text
                       : null,
                   decoration: const InputDecoration(
-                    labelText: 'Pilih Gedung Kampus',
+                    labelText: 'Select Campus Building',
                   ),
                   items: _commonBuildings.map((b) {
                     return DropdownMenuItem<String>(
@@ -1023,11 +1023,11 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                 TextFormField(
                   controller: _buildingController,
                   decoration: const InputDecoration(
-                    labelText: 'Nama Gedung *',
-                    hintText: 'Atau sesuaikan nama gedung...',
+                    labelText: 'Building Name *',
+                    hintText: 'Or customize the building name...',
                   ),
                   validator: (v) => (v == null || v.trim().isEmpty)
-                      ? 'Gedung wajib diisi'
+                      ? 'Building is required'
                       : null,
                 ),
                 const SizedBox(height: 14),
@@ -1040,12 +1040,12 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                         controller: _floorController,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
-                          labelText: 'Lantai *',
-                          hintText: 'Misal: 7',
+                          labelText: 'Floor *',
+                          hintText: 'e.g. 7',
                         ),
                         validator: (v) {
-                          if (v == null || v.trim().isEmpty) return 'Wajib diisi';
-                          if (int.tryParse(v.trim()) == null) return 'Harus angka';
+                          if (v == null || v.trim().isEmpty) return 'Required';
+                          if (int.tryParse(v.trim()) == null) return 'Must be a number';
                           return null;
                         },
                       ),
@@ -1056,12 +1056,12 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                         controller: _capacityController,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
-                          labelText: 'Kapasitas (Orang) *',
-                          hintText: 'Misal: 40',
+                          labelText: 'Capacity (People) *',
+                          hintText: 'e.g. 40',
                         ),
                         validator: (v) {
-                          if (v == null || v.trim().isEmpty) return 'Wajib diisi';
-                          if (int.tryParse(v.trim()) == null) return 'Harus angka';
+                          if (v == null || v.trim().isEmpty) return 'Required';
+                          if (int.tryParse(v.trim()) == null) return 'Must be a number';
                           return null;
                         },
                       ),
@@ -1075,7 +1075,7 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                   isExpanded: true,
                   initialValue: _targetLayout,
                   decoration: const InputDecoration(
-                    labelText: 'Tata Letak Standar (AI Verifikasi)',
+                    labelText: 'Target Layout (AI Verification)',
                   ),
                   items: _layoutOptions.map((layout) {
                     return DropdownMenuItem<String>(
@@ -1097,8 +1097,8 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                 TextFormField(
                   controller: _facilitiesController,
                   decoration: const InputDecoration(
-                    labelText: 'Fasilitas (Pisahkan dengan koma)',
-                    hintText: 'AC, Proyektor, Papan Tulis, Wi-Fi',
+                    labelText: 'Facilities (comma-separated)',
+                    hintText: 'AC, Projector, Whiteboard, Wi-Fi',
                   ),
                 ),
                 const SizedBox(height: 14),
@@ -1107,8 +1107,8 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                 TextFormField(
                   controller: _locationNotesController,
                   decoration: const InputDecoration(
-                    labelText: 'Catatan Lokasi',
-                    hintText: 'Contoh: Sayap Barat, dekat tangga darurat lantai 7',
+                    labelText: 'Location Notes',
+                    hintText: 'e.g. West Wing, near the floor 7 emergency stairs',
                   ),
                 ),
                 const SizedBox(height: 14),
@@ -1118,8 +1118,8 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                   controller: _descriptionController,
                   maxLines: 2,
                   decoration: const InputDecoration(
-                    labelText: 'Deskripsi Singkat',
-                    hintText: 'Kesesuaian fungsi ruangan (kelas teori, lab, dsb)',
+                    labelText: 'Short Description',
+                    hintText: 'Room purpose (lecture, lab, etc.)',
                   ),
                 ),
                 const SizedBox(height: 14),
@@ -1128,7 +1128,7 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                 TextFormField(
                   controller: _imageUrlController,
                   decoration: const InputDecoration(
-                    labelText: 'URL Foto Ruangan',
+                    labelText: 'Room Photo URL',
                     hintText: 'https://...',
                   ),
                 ),
@@ -1149,7 +1149,7 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Status Keaktifan Ruangan',
+                            'Room Availability Status',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
@@ -1158,8 +1158,8 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                           ),
                           Text(
                             _isActive
-                                ? 'Ruangan dapat dicari dan dipinjam mahasiswa'
-                                : 'Ruangan dinonaktifkan sementara',
+                                ? 'The room can be found and booked by students'
+                                : 'The room is temporarily disabled',
                             style: TextStyle(
                               fontSize: 11,
                               color: _isActive
@@ -1187,7 +1187,7 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                 // Tombol Simpan
                 ElevatedButton(
                   onPressed: _submit,
-                  child: Text(isEdit ? 'Simpan Perubahan' : 'Tambahkan Ruangan'),
+                  child: Text(isEdit ? 'Save Changes' : 'Add Room'),
                 ),
               ],
             ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 
-/// Tab "Dashboard" admin (FR-09) — masih berupa placeholder.
+/// Admin "Dashboard" tab (FR-09) — still a placeholder.
 class AdminDashboardTab extends StatelessWidget {
   const AdminDashboardTab({super.key});
 
@@ -10,7 +10,7 @@ class AdminDashboardTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard Admin'),
+        title: const Text('Admin Dashboard'),
         automaticallyImplyLeading: false,
       ),
       body: Center(
@@ -26,7 +26,7 @@ class AdminDashboardTab extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const Text(
-                'Dashboard Admin',
+                'Admin Dashboard',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -35,7 +35,7 @@ class AdminDashboardTab extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Modul statistik dan ringkasan peminjaman ruangan kampus.',
+                'Statistics and campus room booking overview.',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
               ),
@@ -50,7 +50,7 @@ class AdminDashboardTab extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Text(
-                  'PIC Pengembang: Rayazka (FR-09)',
+                  'Developer: Rayazka (FR-09)',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
