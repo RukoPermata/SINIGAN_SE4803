@@ -106,4 +106,40 @@ class RegularSchedule {
       isActive: isActive ?? this.isActive,
     );
   }
+
+  /// Serialisasi entitas ke Map agar dapat disimpan sebagai JSON lokal.
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'roomId': roomId,
+      'roomName': roomName,
+      'courseCode': courseCode,
+      'courseName': courseName,
+      'lecturerName': lecturerName,
+      'classGroup': classGroup,
+      'dayOfWeek': dayOfWeek,
+      'startTime': startTime,
+      'endTime': endTime,
+      'semester': semester,
+      'isActive': isActive,
+    };
+  }
+
+  /// Membuat entitas RegularSchedule dari Map hasil dekode JSON.
+  factory RegularSchedule.fromJson(Map<String, dynamic> json) {
+    return RegularSchedule(
+      id: json['id'] as String,
+      roomId: json['roomId'] as String,
+      roomName: json['roomName'] as String? ?? '',
+      courseCode: json['courseCode'] as String? ?? '',
+      courseName: json['courseName'] as String? ?? '',
+      lecturerName: json['lecturerName'] as String? ?? '',
+      classGroup: json['classGroup'] as String? ?? '',
+      dayOfWeek: (json['dayOfWeek'] as num?)?.toInt() ?? 1,
+      startTime: json['startTime'] as String? ?? '00:00',
+      endTime: json['endTime'] as String? ?? '00:00',
+      semester: json['semester'] as String? ?? '',
+      isActive: json['isActive'] as bool? ?? true,
+    );
+  }
 }
