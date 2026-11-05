@@ -180,4 +180,35 @@ void main() {
     expect(find.byType(RoomManagementScreen), findsOneWidget);
     expect(find.text('Room Management'), findsWidgets);
   });
+
+  testWidgets('Can open the Edit Room modal and save changes', (tester) async {
+    tester.view.physicalSize = const Size(800, 1600);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(buildTestableWidget(const RoomManagementScreen()));
+    await tester.pump();
+
+    final editButtons = find.byIcon(Icons.edit_outlined);
+    expect(editButtons, findsWidgets);
+    await tester.ensureVisible(editButtons.first);
+    await tester.tap(editButtons.first);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Edit Room'), findsOneWidget);
+
+    final nameField = find.widgetWithText(TextFormField, 'Room Name / Code *');
+    await tester.enterText(nameField, 'EDITED-ROOM-01');
+
+    final saveButton = find.widgetWithText(ElevatedButton, 'Save Changes');
+    await tester.ensureVisible(saveButton);
+    await tester.tap(saveButton);
+    await tester.pumpAndSettle();
+
+    expect(
+      MockDataStore.instance.rooms.any((r) => r.name == 'EDITED-ROOM-01'),
+      isTrue,
+    );
+  });
 }

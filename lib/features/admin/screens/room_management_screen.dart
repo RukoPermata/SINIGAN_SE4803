@@ -865,8 +865,23 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
     );
     _locationNotesController = TextEditingController(text: r?.locationNotes ?? '');
     _descriptionController = TextEditingController(text: r?.description ?? '');
-    _targetLayout = r?.targetLayout ?? 'Standard';
+    _targetLayout = _normalizeLayout(r?.targetLayout);
     _isActive = r?.isActive ?? true;
+  }
+
+  /// Maps legacy layout values (e.g. persisted Indonesian ones) to the current
+  /// option set so the dropdown always has a matching item.
+  String _normalizeLayout(String? value) {
+    const legacy = {
+      'Standar': 'Standard',
+      'Ujian': 'Exam',
+      'Diskusi': 'Discussion',
+    };
+    final normalized = legacy[value] ?? value;
+    if (normalized != null && _layoutOptions.contains(normalized)) {
+      return normalized;
+    }
+    return 'Standard';
   }
 
   @override
@@ -1063,7 +1078,7 @@ class _RoomFormSheetState extends State<_RoomFormSheet> {
                   decoration: const InputDecoration(
                     labelText: 'Target Layout (AI Verification)',
                   ),
-                  items: _layoutOptions.map((layout) {
+                  items: <String>{..._layoutOptions, _targetLayout}.map((layout) {
                     return DropdownMenuItem<String>(
                       value: layout,
                       child: Text(layout),
