@@ -1,16 +1,19 @@
 // PIC: Rayazka - Admin Dashboard Screen - FR-09
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../data/mock_data_store.dart';
 import '../../../models/booking.dart';
-import '../../shared/bottom_nav.dart';
+import '../../shared/app_navigation.dart';
 import '../widgets/booking_request_card.dart';
+import 'admin_profile_screen.dart';
 import 'booking_requests_screen.dart';
 import 'booking_review_screen.dart';
 import 'room_condition_screen.dart';
+import 'schedule_management_screen.dart';
 
 /// Halaman utama admin.
 ///
@@ -48,30 +51,21 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   /// Membuka tab pengajuan.
   void _openBookingRequests() {
     setState(() {
-      _currentIndex = 3;
+      _currentIndex = 2;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    /// Urutan halaman harus sesuai dengan urutan item pada BottomNav.
+    /// Urutan halaman mengikuti AppNavigation.forRole(UserRole.admin).
     final pages = [
       _buildDashboardPage(),
-      _buildPlaceholder(
-        title: 'Manajemen Ruangan',
-        subtitle: 'Modul master data ruangan dan status aktif/nonaktif.',
-        picName: 'Fityah (FR-10)',
-        icon: Icons.meeting_room_outlined,
-      ),
-      _buildPlaceholder(
-        title: 'Jadwal & Blokir Tanggal',
-        subtitle: 'Modul jadwal perkuliahan reguler dan penonaktifan tanggal.',
-        picName: 'Fityah (FR-11, FR-12)',
-        icon: Icons.calendar_month_outlined,
-      ),
+      const ScheduleManagementScreen(),
       const BookingRequestsScreen(),
       const RoomConditionScreen(),
+      const AdminProfileScreen(),
     ];
+    final destinations = AppNavigation.forRole(UserRole.admin);
 
     return Scaffold(
       body: IndexedStack(
@@ -79,7 +73,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         children: pages,
       ),
       bottomNavigationBar: BottomNav(
-        role: UserRole.admin,
+        destinations: destinations,
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
@@ -97,10 +91,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         title: const Text('Dashboard Admin'),
         automaticallyImplyLeading: false,
       ),
-      body: AnimatedBuilder(
-        animation: _dataStore,
-        builder: (context, child) {
-          final bookings = _dataStore.bookings;
+      body: GetBuilder<MockDataStore>(
+        init: _dataStore,
+        builder: (store) {
+          final bookings = store.bookings;
 
           final totalBookings = bookings.length;
 
@@ -294,72 +288,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
-  /// Placeholder untuk halaman admin yang belum menjadi fokus tugas ini.
-  Widget _buildPlaceholder({
-    required String title,
-    required String subtitle,
-    required String picName,
-    required IconData icon,
-  }) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        automaticallyImplyLeading: false,
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
-                size: 64,
-                color: AppColors.primary,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                subtitle,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: AppColors.textSecondary,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.lavender,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  'PIC Pengembang: $picName',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 /// Widget kartu metrik dashboard.
