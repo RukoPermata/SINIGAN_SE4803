@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_logo.dart';
 import '../../../data/mock_data_store.dart';
 import '../../../models/room.dart';
 import '../../shared/bottom_nav.dart';
@@ -134,23 +135,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   Widget _buildHeader() {
     return Row(
       children: [
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(14),
-          ),
-          alignment: Alignment.center,
-          child: const Text(
-            'S',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 23,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ),
+        const AppLogo(size: 44),
         const SizedBox(width: 10),
         const Expanded(
           child: Column(
