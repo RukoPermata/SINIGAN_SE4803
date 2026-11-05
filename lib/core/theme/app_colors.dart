@@ -21,6 +21,9 @@ class AppColors {
 
   // Booking status colors
   static const Color success = Color(0xFF16845B);
+  static const Color successLight = Color(0xFFE8F8F0);
   static const Color warning = Color(0xFFB7791F);
+  static const Color warningLight = Color(0xFFFEF6E9);
   static const Color error = Color(0xFFC43D4B);
+  static const Color errorLight = Color(0xFFFEECEE);
 }
