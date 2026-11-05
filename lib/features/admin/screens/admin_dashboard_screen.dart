@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../auth/screens/login_screen.dart';
 import '../../shared/bottom_nav.dart';
+import 'booking_requests_screen.dart';
 import 'room_condition_screen.dart';
 import 'room_management_screen.dart';
 import 'schedule_management_screen.dart';
@@ -52,12 +53,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       ),
       const RoomManagementScreen(),
       const ScheduleManagementScreen(),
-      _buildPlaceholder(
-        title: 'Permohonan Peminjaman',
-        subtitle: 'Modul antrean persetujuan dan penolakan pengajuan mahasiswa.',
-        picName: 'Rayazka (FR-13)',
-        icon: Icons.assignment_outlined,
-      ),
+      const BookingRequestsScreen(),
       const RoomConditionScreen(),
     ];
 
