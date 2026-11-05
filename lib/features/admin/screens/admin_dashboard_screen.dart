@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../data/mock_data_store.dart';
@@ -67,28 +68,47 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     ];
     final destinations = AppNavigation.forRole(UserRole.admin);
 
-    return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: pages,
-      ),
-      bottomNavigationBar: BottomNav(
-        destinations: destinations,
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _handleBack();
+      },
+      child: Scaffold(
+        body: IndexedStack(
+          index: _currentIndex,
+          children: pages,
+        ),
+        bottomNavigationBar: BottomNav(
+          destinations: destinations,
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+        ),
       ),
     );
+  }
+
+  void _handleBack() {
+    if (_currentIndex != 0) {
+      setState(() => _currentIndex = 0);
+      return;
+    }
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
+      Get.offAllNamed(AppRoutes.login);
+    }
   }
 
   /// Membuat halaman dashboard utama.
   Widget _buildDashboardPage() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard Admin'),
+        title: const Text('Admin Dashboard'),
         automaticallyImplyLeading: false,
       ),
       body: GetBuilder<MockDataStore>(
@@ -171,12 +191,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Selamat datang, Admin',
+          'Welcome, Admin',
           style: AppTextStyles.pageTitle,
         ),
         const SizedBox(height: 8),
         Text(
-          'Pantau dan kelola aktivitas peminjaman ruangan kampus.',
+          'Monitor and manage campus room booking activity.',
           style: AppTextStyles.body.copyWith(
             color: AppColors.textSecondary,
           ),
@@ -208,21 +228,21 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           backgroundColor: AppColors.lavender,
         ),
         _MetricCard(
-          title: 'Menunggu',
+          title: 'Pending',
           value: pendingBookings.toString(),
           icon: Icons.hourglass_empty,
           color: AppColors.warning,
           backgroundColor: AppColors.warningLight,
         ),
         _MetricCard(
-          title: 'Disetujui',
+          title: 'Approved',
           value: approvedBookings.toString(),
           icon: Icons.check_circle_outline,
           color: AppColors.success,
           backgroundColor: AppColors.successLight,
         ),
         _MetricCard(
-          title: 'Ditolak',
+          title: 'Rejected',
           value: rejectedBookings.toString(),
           icon: Icons.cancel_outlined,
           color: AppColors.error,
@@ -240,14 +260,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       children: [
         const Expanded(
           child: Text(
-            'Permohonan Menunggu',
+            'Pending Requests',
             style: AppTextStyles.sectionTitle,
           ),
         ),
         TextButton(
           onPressed: _openBookingRequests,
           child: Text(
-            'Lihat Semua${pendingCount > 0 ? ' ($pendingCount)' : ''}',
+            'View All${pendingCount > 0 ? ' ($pendingCount)' : ''}',
           ),
         ),
       ],
@@ -273,13 +293,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           ),
           const SizedBox(height: 12),
           const Text(
-            'Tidak ada permohonan yang menunggu.',
+            'No pending requests.',
             textAlign: TextAlign.center,
             style: AppTextStyles.cardTitle,
           ),
           const SizedBox(height: 6),
           Text(
-            'Semua permohonan sudah diproses.',
+            'All requests have been processed.',
             textAlign: TextAlign.center,
             style: AppTextStyles.caption,
           ),
