@@ -159,6 +159,7 @@ Widget _buildHeader() {
     );
   }
 }
+
 // Widget kecil untuk menampilkan satu baris informasi booking.
 class _BookingInfoRow extends StatelessWidget {
   const _BookingInfoRow({
@@ -204,4 +205,3 @@ class _BookingInfoRow extends StatelessWidget {
     );
   }
 }
-
