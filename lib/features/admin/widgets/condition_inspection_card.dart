@@ -22,8 +22,8 @@ class ConditionInspectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final predicted = booking.predictedLayout ?? 'Standar';
-    final isMatching = predicted.toLowerCase() == 'standar';
+    final predicted = booking.predictedLayout ?? 'Standard';
+    final isMatching = predicted.toLowerCase() == 'standard';
     final confidence = (booking.cvConfidence ?? 0.94) * 100;
 
     return Card(
@@ -68,8 +68,8 @@ class ConditionInspectionCard extends StatelessWidget {
               ? 'approved'
               : (isMatching ? 'approved' : 'pending'),
           customLabel: isCompleted
-              ? 'Terverifikasi'
-              : (isMatching ? 'Layout Sesuai' : 'Perlu Tinjauan'),
+              ? 'Verified'
+              : (isMatching ? 'Layout Matches' : 'Needs Review'),
         ),
       ],
     );
@@ -85,7 +85,7 @@ class ConditionInspectionCard extends StatelessWidget {
         ),
         const SizedBox(height: 2),
         Text(
-          'Pemohon: ${booking.userName} (${booking.userNim})',
+          'Requester: ${booking.userName} (${booking.userNim})',
           style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
         ),
       ],
@@ -97,14 +97,14 @@ class ConditionInspectionCard extends StatelessWidget {
       children: [
         Expanded(
           child: _buildThumbnailBox(
-            label: 'Foto Sebelum',
+            label: 'Before Photo',
             imageUrl: booking.beforePhotoUrl,
           ),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: _buildThumbnailBox(
-            label: 'Foto Sesudah',
+            label: 'After Photo',
             imageUrl: booking.afterPhotoUrl,
           ),
         ),

@@ -20,11 +20,11 @@ void main() {
     expect(find.byType(AdminDashboardScreen), findsOneWidget);
 
     // Switch to the 'Jadwal' tab.
-    final jadwalTab = find.text('Jadwal');
+    final jadwalTab = find.text('Schedule');
     expect(jadwalTab, findsOneWidget);
     await tester.tap(jadwalTab);
     await tester.pumpAndSettle();
-    expect(find.text('Jadwal & Blokir Tanggal'), findsOneWidget);
+    expect(find.text('Schedule & Date Blocks'), findsOneWidget);
 
     // Trigger back (system pop / back navigation):
     // 1st back from a non-first tab returns to tab 0.

@@ -9,7 +9,7 @@ class Room {
     required this.facilities,
     required this.imageUrl,
     this.isActive = true,
-    this.targetLayout = 'Standar',
+    this.targetLayout = 'Standard',
     this.description = '',
     this.locationNotes = '',
   });
@@ -106,7 +106,7 @@ class Room {
           .toList(),
       imageUrl: json['imageUrl'] as String? ?? '',
       isActive: json['isActive'] as bool? ?? true,
-      targetLayout: json['targetLayout'] as String? ?? 'Standar',
+      targetLayout: json['targetLayout'] as String? ?? 'Standard',
       description: json['description'] as String? ?? '',
       locationNotes: json['locationNotes'] as String? ?? '',
     );
