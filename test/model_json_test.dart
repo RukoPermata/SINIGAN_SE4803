@@ -79,7 +79,7 @@ void main() {
     final restored = RegularSchedule.fromJson(schedule.toJson());
 
     expect(restored.dayOfWeek, 3);
-    expect(restored.dayName, 'Rabu');
+    expect(restored.dayName, 'Wednesday');
     expect(restored.isActive, isFalse);
     expect(restored.courseName, 'Pemrograman Aplikasi Bergerak');
   });

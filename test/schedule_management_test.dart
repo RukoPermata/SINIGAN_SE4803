@@ -19,47 +19,47 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verify AppBar title
-    expect(find.text('Jadwal & Blokir Tanggal'), findsOneWidget);
+    expect(find.text('Schedule & Date Blocks'), findsOneWidget);
 
     // Verify Tab headers
     expect(find.byType(Tab), findsNWidgets(2));
 
     // Verify day filter chips
-    expect(find.widgetWithText(FilterChip, 'Semua Hari'), findsOneWidget);
-    expect(find.widgetWithText(FilterChip, 'Senin'), findsOneWidget);
-    expect(find.widgetWithText(FilterChip, 'Selasa'), findsOneWidget);
-    expect(find.widgetWithText(FilterChip, 'Rabu'), findsOneWidget);
-    expect(find.widgetWithText(FilterChip, 'Kamis'), findsOneWidget);
-    expect(find.widgetWithText(FilterChip, 'Jumat'), findsOneWidget);
-    expect(find.widgetWithText(FilterChip, 'Sabtu'), findsOneWidget);
+    expect(find.widgetWithText(FilterChip, 'All Days'), findsOneWidget);
+    expect(find.widgetWithText(FilterChip, 'Monday'), findsOneWidget);
+    expect(find.widgetWithText(FilterChip, 'Tuesday'), findsOneWidget);
+    expect(find.widgetWithText(FilterChip, 'Wednesday'), findsOneWidget);
+    expect(find.widgetWithText(FilterChip, 'Thursday'), findsOneWidget);
+    expect(find.widgetWithText(FilterChip, 'Friday'), findsOneWidget);
+    expect(find.widgetWithText(FilterChip, 'Saturday'), findsOneWidget);
 
     // Verify schedule items from mock data
-    expect(find.text('Pemrograman Aplikasi Bergerak'), findsOneWidget);
+    expect(find.text('Mobile Application Programming'), findsOneWidget);
     expect(find.text('SE4803'), findsOneWidget);
     expect(find.text('Dr. Budi Santoso, M.Kom.'), findsOneWidget);
 
     // Verify FloatingActionButton
-    expect(find.text('Tambah Jadwal'), findsOneWidget);
+    expect(find.text('Add Schedule'), findsOneWidget);
   });
 
   testWidgets('Filtering regular schedules by day works properly', (tester) async {
     await tester.pumpWidget(buildTestableWidget(const ScheduleManagementScreen()));
     await tester.pumpAndSettle();
 
-    // Tap on 'Selasa' filter chip
-    await tester.tap(find.widgetWithText(FilterChip, 'Selasa'));
+    // Tap on 'Tuesday' filter chip
+    await tester.tap(find.widgetWithText(FilterChip, 'Tuesday'));
     await tester.pumpAndSettle();
 
     // Should show schedule on Tuesday: Konstruksi & Pengujian Perangkat Lunak
-    expect(find.text('Konstruksi & Pengujian Perangkat Lunak'), findsOneWidget);
+    expect(find.text('Software Construction & Testing'), findsOneWidget);
     // Should NOT show schedule on Monday: Pemrograman Aplikasi Bergerak
-    expect(find.text('Pemrograman Aplikasi Bergerak'), findsNothing);
+    expect(find.text('Mobile Application Programming'), findsNothing);
 
-    // Tap on 'Reset Filter'
-    await tester.tap(find.text('Reset Filter'));
+    // Tap on 'Reset Filters'
+    await tester.tap(find.text('Reset Filters'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Pemrograman Aplikasi Bergerak'), findsOneWidget);
+    expect(find.text('Mobile Application Programming'), findsOneWidget);
   });
 
   testWidgets('Toggling schedule active status updates MockDataStore', (tester) async {
@@ -97,7 +97,7 @@ void main() {
       dayOfWeek: 1,
       startTime: '06:00',
       endTime: '07:30',
-      semester: 'Genap 2024/2025',
+      semester: 'Even Semester 2024/2025',
       isActive: true,
     );
     MockDataStore.instance.addRegularSchedule(tempSched);
@@ -116,10 +116,10 @@ void main() {
     await tester.pumpAndSettle();
 
     // Confirm dialog appears
-    expect(find.text('Hapus Jadwal Perkuliahan?'), findsOneWidget);
+    expect(find.text('Delete Class Schedule?'), findsOneWidget);
 
-    // Tap 'Hapus Jadwal'
-    final confirmButton = find.widgetWithText(ElevatedButton, 'Hapus Jadwal');
+    // Tap 'Delete Schedule'
+    final confirmButton = find.widgetWithText(ElevatedButton, 'Delete Schedule');
     await tester.tap(confirmButton);
     await tester.pumpAndSettle();
 
@@ -141,17 +141,17 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verify educational banner and filter chips
-    expect(find.textContaining('Periode pemblokiran menonaktifkan ruangan'), findsOneWidget);
-    expect(find.textContaining('Semua ('), findsOneWidget);
-    expect(find.textContaining('Aktif ('), findsOneWidget);
-    expect(find.textContaining('Nonaktif ('), findsOneWidget);
+    expect(find.textContaining('Blackout periods automatically disable'), findsOneWidget);
+    expect(find.textContaining('All ('), findsOneWidget);
+    expect(find.textContaining('Active ('), findsOneWidget);
+    expect(find.textContaining('Inactive ('), findsOneWidget);
 
     // Verify mock blackout items
-    expect(find.text('Pekan Ujian Tengah Semester (UTS) Genap'), findsOneWidget);
-    expect(find.text('Maintenance Jaringan & Upgrade Workstation'), findsOneWidget);
+    expect(find.text('Midterm Exam Week (Even Semester)'), findsOneWidget);
+    expect(find.text('Network Maintenance & Workstation Upgrade'), findsOneWidget);
 
-    // Verify FAB changed to 'Blokir Tanggal'
-    expect(find.widgetWithText(FloatingActionButton, 'Blokir Tanggal'), findsOneWidget);
+    // Verify FAB changed to 'Block Dates'
+    expect(find.widgetWithText(FloatingActionButton, 'Block Dates'), findsOneWidget);
   });
 
   testWidgets('Can delete a blackout period with confirmation dialog', (tester) async {
@@ -165,14 +165,14 @@ void main() {
     await tester.tap(blackoutTabIcon);
     await tester.pumpAndSettle();
 
-    // Tap 'Batalkan & Hapus' on the first visible card
-    final cancelBtn = find.widgetWithText(TextButton, 'Batalkan & Hapus').first;
+    // Tap 'Cancel & Delete' on the first visible card
+    final cancelBtn = find.widgetWithText(TextButton, 'Cancel & Delete').first;
     await tester.tap(cancelBtn);
     await tester.pumpAndSettle();
 
-    expect(find.text('Batalkan & Hapus Pemblokiran?'), findsOneWidget);
+    expect(find.text('Cancel & Delete Blackout?'), findsOneWidget);
 
-    final confirmBtn = find.widgetWithText(ElevatedButton, 'Batalkan & Hapus');
+    final confirmBtn = find.widgetWithText(ElevatedButton, 'Cancel & Delete');
     await tester.tap(confirmBtn);
     await tester.pumpAndSettle();
 
@@ -188,13 +188,13 @@ void main() {
     await tester.pumpAndSettle();
 
     // Tap tab 'Jadwal' on custom BottomNav
-    final jadwalNav = find.text('Jadwal');
+    final jadwalNav = find.text('Schedule');
     expect(jadwalNav, findsOneWidget);
 
     await tester.tap(jadwalNav);
     await tester.pumpAndSettle();
 
-    expect(find.text('Jadwal & Blokir Tanggal'), findsOneWidget);
+    expect(find.text('Schedule & Date Blocks'), findsOneWidget);
     expect(find.byType(ScheduleManagementScreen), findsOneWidget);
   });
 }

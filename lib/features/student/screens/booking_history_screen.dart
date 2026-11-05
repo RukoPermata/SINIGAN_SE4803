@@ -23,7 +23,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Riwayat Peminjaman'),
+        title: const Text('Booking History'),
         automaticallyImplyLeading: false,
       ),
       body: GetBuilder<MockDataStore>(
@@ -64,7 +64,7 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
   }
 
   Widget _buildFilters() {
-    const filters = ['Semua', 'Menunggu', 'Disetujui', 'Ditolak'];
+    const filters = ['All', 'Pending', 'Approved', 'Rejected'];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
@@ -244,14 +244,14 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
                 ],
               ),
               const SizedBox(height: 16),
-              _detailRow('Gedung', booking.building),
-              _detailRow('Tanggal', DateTimeUtils.formatDateLong(booking.date)),
-              _detailRow('Waktu', '${booking.startTime} - ${booking.endTime}'),
-              _detailRow('Pemohon', '${booking.userName} (${booking.userNim})'),
-              _detailRow('Tujuan', booking.purpose),
+              _detailRow('Building', booking.building),
+              _detailRow('Date', DateTimeUtils.formatDateLong(booking.date)),
+              _detailRow('Time', '${booking.startTime} - ${booking.endTime}'),
+              _detailRow('Requester', '${booking.userName} (${booking.userNim})'),
+              _detailRow('Purpose', booking.purpose),
               if (booking.status == BookingStatus.rejected &&
                   booking.rejectionReason != null)
-                _detailRow('Alasan Ditolak', booking.rejectionReason!),
+                _detailRow('Rejection Reason', booking.rejectionReason!),
             ],
           ),
         ),
@@ -300,12 +300,12 @@ class _BookingHistoryScreenState extends State<BookingHistoryScreen> {
             ),
             const SizedBox(height: 12),
             const Text(
-              'Belum Ada Peminjaman',
+              'No Bookings Yet',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 6),
             const Text(
-              'Pengajuan peminjamanmu akan tampil di sini.',
+              'Your booking requests will appear here.',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
             ),
