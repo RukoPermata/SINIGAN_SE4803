@@ -95,13 +95,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       appBar: AppBar(
         title: Text(title),
         automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            tooltip: 'Logout',
-            onPressed: _logout,
-            icon: const Icon(Icons.logout),
-          ),
-        ],
       ),
       body: Center(
         child: Padding(
