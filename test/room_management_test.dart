@@ -27,12 +27,12 @@ void main() {
     await tester.pump();
 
     // Verify AppBar title
-    expect(find.text('Manajemen Ruangan'), findsOneWidget);
+    expect(find.text('Room Management'), findsOneWidget);
 
     // Verify Statistics overview
-    expect(find.text('Total Ruang'), findsOneWidget);
-    expect(find.text('Aktif'), findsAtLeastNWidgets(1));
-    expect(find.text('Nonaktif'), findsAtLeastNWidgets(1));
+    expect(find.text('Total Rooms'), findsOneWidget);
+    expect(find.text('Active'), findsAtLeastNWidgets(1));
+    expect(find.text('Inactive'), findsAtLeastNWidgets(1));
 
     // Verify rooms from mock data are displayed
     expect(find.text('TULT-0701'), findsOneWidget);
@@ -103,17 +103,17 @@ void main() {
     await tester.pumpWidget(buildTestableWidget(const RoomManagementScreen()));
     await tester.pump();
 
-    // Tap 'Nonaktif' chip
-    final nonaktifChip = find.widgetWithText(ChoiceChip, 'Nonaktif');
+    // Tap 'Inactive' chip
+    final nonaktifChip = find.widgetWithText(ChoiceChip, 'Inactive');
     await tester.tap(nonaktifChip);
     await tester.pump();
 
     // All default mock rooms are active, so nonaktif should show empty state or 0
-    final emptyTitle = find.text('Ruangan Tidak Ditemukan');
+    final emptyTitle = find.text('No Rooms Found');
     expect(emptyTitle, findsOneWidget);
 
-    // Tap 'Semua' chip
-    final semuaChip = find.widgetWithText(ChoiceChip, 'Semua');
+    // Tap 'All' chip
+    final semuaChip = find.widgetWithText(ChoiceChip, 'All');
     await tester.tap(semuaChip);
     await tester.pump();
 
@@ -134,13 +134,13 @@ void main() {
     await tester.tap(addIcon);
     await tester.pumpAndSettle();
 
-    expect(find.text('Tambah Ruangan Baru'), findsOneWidget);
+    expect(find.text('Add New Room'), findsOneWidget);
 
     // Fill form
-    final nameField = find.widgetWithText(TextFormField, 'Nama / Kode Ruangan *');
+    final nameField = find.widgetWithText(TextFormField, 'Room Name / Code *');
     await tester.enterText(nameField, 'KU3.05.01');
 
-    final submitButton = find.widgetWithText(ElevatedButton, 'Tambahkan Ruangan');
+    final submitButton = find.widgetWithText(ElevatedButton, 'Add Room');
     await tester.ensureVisible(submitButton);
     await tester.tap(submitButton);
     await tester.pumpAndSettle();
@@ -169,15 +169,15 @@ void main() {
     await tester.pump();
 
     // Go to the Profil tab, then open Manajemen Ruangan from its menu.
-    await tester.tap(find.text('Profil'));
+    await tester.tap(find.text('Profile'));
     await tester.pump();
 
-    final roomMenu = find.text('Manajemen Ruangan');
+    final roomMenu = find.text('Room Management');
     await tester.ensureVisible(roomMenu);
     await tester.tap(roomMenu);
     await tester.pumpAndSettle();
 
     expect(find.byType(RoomManagementScreen), findsOneWidget);
-    expect(find.text('Manajemen Ruangan'), findsWidgets);
+    expect(find.text('Room Management'), findsWidgets);
   });
 }

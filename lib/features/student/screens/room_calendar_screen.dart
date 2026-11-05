@@ -50,7 +50,7 @@ class _RoomCalendarScreenState extends State<RoomCalendarScreen> {
     final store = MockDataStore.instance;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Cek Jam Kosong')),
+      appBar: AppBar(title: const Text('Check Free Hours')),
       body: Column(
         children: [
           _buildDayStrip(),
@@ -120,9 +120,9 @@ class _RoomCalendarScreenState extends State<RoomCalendarScreen> {
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
       child: Row(
         children: [
-          _legendDot(AppColors.success, 'Kosong / bisa dipinjam'),
+          _legendDot(AppColors.success, 'Free / bookable'),
           const SizedBox(width: 16),
-          _legendDot(AppColors.textSecondary, 'Terpakai'),
+          _legendDot(AppColors.textSecondary, 'Booked'),
         ],
       ),
     );
@@ -208,13 +208,13 @@ class _RoomCalendarScreenState extends State<RoomCalendarScreen> {
     final String statusLabel;
     if (available) {
       color = AppColors.success;
-      statusLabel = 'Kosong';
+      statusLabel = 'Free';
     } else if (isPast) {
       color = AppColors.textSecondary;
-      statusLabel = 'Terlewat';
+      statusLabel = 'Past';
     } else {
       color = AppColors.error;
-      statusLabel = 'Terpakai';
+      statusLabel = 'Booked';
     }
 
     return Padding(
@@ -272,7 +272,7 @@ class _RoomCalendarScreenState extends State<RoomCalendarScreen> {
                   const Row(
                     children: [
                       Text(
-                        'Pinjam',
+                        'Book',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
