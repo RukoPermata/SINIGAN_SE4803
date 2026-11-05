@@ -159,7 +159,7 @@ void main() {
     );
   });
 
-  testWidgets('AdminDashboardScreen mounts RoomManagementScreen on tab index 1', (tester) async {
+  testWidgets('Admin opens Room Management from the Profil tab', (tester) async {
     tester.view.physicalSize = const Size(800, 1600);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -168,14 +168,16 @@ void main() {
     await tester.pumpWidget(buildTestableWidget(const AdminDashboardScreen()));
     await tester.pump();
 
-    // Tap tab 'Ruangan'
-    final ruanganTab = find.text('Ruangan');
-    expect(ruanganTab, findsOneWidget);
-
-    await tester.tap(ruanganTab);
+    // Go to the Profil tab, then open Manajemen Ruangan from its menu.
+    await tester.tap(find.text('Profil'));
     await tester.pump();
 
+    final roomMenu = find.text('Manajemen Ruangan');
+    await tester.ensureVisible(roomMenu);
+    await tester.tap(roomMenu);
+    await tester.pumpAndSettle();
+
     expect(find.byType(RoomManagementScreen), findsOneWidget);
-    expect(find.text('Manajemen Ruangan'), findsOneWidget);
+    expect(find.text('Manajemen Ruangan'), findsWidgets);
   });
 }
