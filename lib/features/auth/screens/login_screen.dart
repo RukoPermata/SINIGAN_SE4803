@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_logo.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -207,7 +208,6 @@ class _LoginScreenState extends State<LoginScreen> {
           width: 64,
           height: 64,
           decoration: BoxDecoration(
-            color: AppColors.primary,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
@@ -217,15 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
-          alignment: Alignment.center,
-          child: const Text(
-            'S',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 32,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
+          child: const AppLogo(size: 64),
         ),
         const SizedBox(height: 12),
         const Text(
