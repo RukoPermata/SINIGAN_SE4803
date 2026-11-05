@@ -11,7 +11,6 @@ import '../../../data/mock_data_store.dart';
 import '../../../models/blackout_period.dart';
 import '../../../models/regular_schedule.dart';
 import '../../../models/room.dart';
-import '../../auth/screens/login_screen.dart';
 
 /// Layar Pengelolaan Jadwal Perkuliahan Reguler (FR-11)
 /// dan Pemblokiran Tanggal Nonaktif / Blackout Dates (FR-12).
@@ -50,37 +49,6 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
     super.dispose();
   }
 
-  void _logout() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Confirm Logout'),
-        content: const Text('Are you sure you want to sign out of the admin account?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pop(ctx);
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => const LoginScreen()),
-                (route) => false,
-              );
-            },
-            child: const Text('Logout'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MockDataStore>(
@@ -113,13 +81,6 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen>
               ],
             ),
             automaticallyImplyLeading: false,
-            actions: [
-              IconButton(
-                tooltip: 'Logout',
-                onPressed: _logout,
-                icon: const Icon(Icons.logout, color: AppColors.textSecondary),
-              ),
-            ],
             bottom: TabBar(
               controller: _tabController,
               indicatorColor: AppColors.primary,
