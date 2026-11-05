@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/date_time_utils.dart';
+import '../../../core/widgets/status_badge.dart';
+import '../../../data/mock_data_store.dart';
 import '../../../models/booking.dart';
 
 /// Layar rincian pemeriksaan kondisi ruangan & evaluasi model Computer Vision
@@ -27,7 +29,7 @@ class RoomConditionDetailScreen extends StatelessWidget {
         duration: const Duration(seconds: 2),
       ),
     );
-
+    MockDataStore.instance.update();
     Navigator.pop(context, true);
   }
 
@@ -259,20 +261,9 @@ class RoomConditionDetailScreen extends StatelessWidget {
                   color: AppColors.textPrimary,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: isMatching ? AppColors.successLight : AppColors.warningLight,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  isMatching ? 'Tata Letak Sesuai' : 'Perlu Tinjauan',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: isMatching ? AppColors.success : AppColors.warning,
-                  ),
-                ),
+              StatusBadge(
+                status: isMatching ? 'approved' : 'pending',
+                customLabel: isMatching ? 'Tata Letak Sesuai' : 'Perlu Tinjauan',
               ),
             ],
           ),
