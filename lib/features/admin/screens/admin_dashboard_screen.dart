@@ -6,6 +6,8 @@ import '../../../core/theme/app_colors.dart';
 import '../../auth/screens/login_screen.dart';
 import '../../shared/bottom_nav.dart';
 import 'room_condition_screen.dart';
+import 'room_management_screen.dart';
+import 'schedule_management_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -25,6 +27,20 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     );
   }
 
+  void _handleBack() {
+    if (_currentIndex != 0) {
+      setState(() {
+        _currentIndex = 0;
+      });
+      return;
+    }
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    } else {
+      _logout();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final pages = [
@@ -34,18 +50,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         picName: 'Rayazka (FR-09)',
         icon: Icons.dashboard_outlined,
       ),
-      _buildPlaceholder(
-        title: 'Manajemen Ruangan',
-        subtitle: 'Modul master data ruangan dan status aktif/nonaktif.',
-        picName: 'Fityah (FR-10)',
-        icon: Icons.meeting_room_outlined,
-      ),
-      _buildPlaceholder(
-        title: 'Jadwal & Blokir Tanggal',
-        subtitle: 'Modul jadwal perkuliahan reguler dan penonaktifan tanggal.',
-        picName: 'Fityah (FR-11, FR-12)',
-        icon: Icons.calendar_month_outlined,
-      ),
+      const RoomManagementScreen(),
+      const ScheduleManagementScreen(),
       _buildPlaceholder(
         title: 'Permohonan Peminjaman',
         subtitle: 'Modul antrean persetujuan dan penolakan pengajuan mahasiswa.',
@@ -55,19 +61,26 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       const RoomConditionScreen(),
     ];
 
-    return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: pages,
-      ),
-      bottomNavigationBar: BottomNav(
-        role: UserRole.admin,
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _handleBack();
+      },
+      child: Scaffold(
+        body: IndexedStack(
+          index: _currentIndex,
+          children: pages,
+        ),
+        bottomNavigationBar: BottomNav(
+          role: UserRole.admin,
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+        ),
       ),
     );
   }
