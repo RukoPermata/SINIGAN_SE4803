@@ -36,15 +36,15 @@ class RoomDetailScreen extends StatelessWidget {
               const SizedBox(height: 16),
               _buildSummary(current),
               const SizedBox(height: 22),
-              _sectionTitle('Fasilitas'),
+              _sectionTitle('Facilities'),
               const SizedBox(height: 10),
               _buildFacilities(current),
               const SizedBox(height: 22),
-              _sectionTitle('Deskripsi'),
+              _sectionTitle('Description'),
               const SizedBox(height: 8),
               Text(
                 current.description.isEmpty
-                    ? 'Belum ada deskripsi untuk ruangan ini.'
+                    ? 'No description available for this room.'
                     : current.description,
                 style: const TextStyle(
                   fontSize: 13,
@@ -53,11 +53,11 @@ class RoomDetailScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 22),
-              _sectionTitle('Denah Lokasi'),
+              _sectionTitle('Location Map'),
               const SizedBox(height: 10),
               _buildDenah(current),
               const SizedBox(height: 22),
-              _sectionTitle('Jadwal Kuliah Hari Ini'),
+              _sectionTitle('Today\'s Class Schedule'),
               const SizedBox(height: 10),
               _buildTodaySchedule(todaySchedules),
             ],
@@ -131,8 +131,8 @@ class RoomDetailScreen extends StatelessWidget {
           const SizedBox(height: 14),
           Row(
             children: [
-              _buildStat(Icons.stairs_outlined, 'Lantai', '${room.floor}'),
-              _buildStat(Icons.people_outline, 'Kapasitas', '${room.capacity}'),
+              _buildStat(Icons.stairs_outlined, 'Floor', '${room.floor}'),
+              _buildStat(Icons.people_outline, 'Capacity', '${room.capacity}'),
               _buildStat(Icons.dashboard_outlined, 'Layout', room.targetLayout),
             ],
           ),
@@ -200,7 +200,7 @@ class RoomDetailScreen extends StatelessWidget {
   Widget _buildFacilities(Room room) {
     if (room.facilities.isEmpty) {
       return const Text(
-        'Belum ada data fasilitas.',
+        'No facility data yet.',
         style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
       );
     }
@@ -254,7 +254,7 @@ class RoomDetailScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               color: Colors.white.withValues(alpha: 0.85),
               child: Text(
-                'Posisi ${room.name} di ${room.building}',
+                'Location of ${room.name} in ${room.building}',
                 style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
@@ -282,7 +282,7 @@ class RoomDetailScreen extends StatelessWidget {
             SizedBox(width: 8),
             Expanded(
               child: Text(
-                'Tidak ada jadwal kuliah hari ini. Ruangan relatif kosong.',
+                'No classes today. The room is mostly free.',
                 style: TextStyle(fontSize: 12, color: AppColors.success),
               ),
             ),
@@ -366,7 +366,7 @@ class RoomDetailScreen extends StatelessWidget {
                   onPressed: () =>
                       Get.to(() => RoomCalendarScreen(room: room)),
                   icon: const Icon(Icons.calendar_month_outlined, size: 18),
-                  label: const Text('Cek Jam Kosong'),
+                  label: const Text('Check Free Hours'),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.primary,
                     side: const BorderSide(color: AppColors.primary),
@@ -384,7 +384,7 @@ class RoomDetailScreen extends StatelessWidget {
                       ? () => Get.to(() => BookingFormScreen(room: room))
                       : null,
                   icon: const Icon(Icons.event_available_outlined, size: 18),
-                  label: const Text('Ajukan Peminjaman'),
+                  label: const Text('Request Booking'),
                 ),
               ),
             ],

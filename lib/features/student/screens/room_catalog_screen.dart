@@ -24,10 +24,10 @@ class _RoomCatalogScreenState extends State<RoomCatalogScreen> {
   int _minCapacity = 0;
 
   static const Map<String, int> _capacityOptions = {
-    'Semua Ukuran': 0,
-    '≥ 20 orang': 20,
-    '≥ 40 orang': 40,
-    '≥ 60 orang': 60,
+    'Any size': 0,
+    '≥ 20 people': 20,
+    '≥ 40 people': 40,
+    '≥ 60 people': 60,
   };
 
   @override
@@ -40,7 +40,7 @@ class _RoomCatalogScreenState extends State<RoomCatalogScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Katalog Ruangan'),
+        title: const Text('Room Catalog'),
         automaticallyImplyLeading: false,
       ),
       body: GetBuilder<MockDataStore>(
@@ -81,7 +81,7 @@ class _RoomCatalogScreenState extends State<RoomCatalogScreen> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
                 child: Text(
-                  '${rooms.length} ruangan ditemukan',
+                  '${rooms.length} rooms found',
                   style: const TextStyle(
                     fontSize: 12,
                     color: AppColors.textSecondary,
@@ -117,7 +117,7 @@ class _RoomCatalogScreenState extends State<RoomCatalogScreen> {
       controller: _searchController,
       onChanged: (value) => setState(() => _query = value.trim()),
       decoration: InputDecoration(
-        hintText: 'Cari nama ruangan, gedung, atau fasilitas...',
+        hintText: 'Search room name, building, or facility...',
         prefixIcon: const Icon(Icons.search, size: 20),
         suffixIcon: _searchController.text.isNotEmpty
             ? IconButton(
@@ -140,10 +140,10 @@ class _RoomCatalogScreenState extends State<RoomCatalogScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Row(
         children: [
-          _buildFloorChip(label: 'Semua Lantai', value: null),
+          _buildFloorChip(label: 'All Floors', value: null),
           for (final floor in floors) ...[
             const SizedBox(width: 8),
-            _buildFloorChip(label: 'Lantai $floor', value: floor),
+            _buildFloorChip(label: 'Floor $floor', value: floor),
           ],
         ],
       ),
@@ -193,7 +193,7 @@ class _RoomCatalogScreenState extends State<RoomCatalogScreen> {
               .map(
                 (e) => DropdownMenuItem<int>(
                   value: e.value,
-                  child: Text('Kapasitas: ${e.key}'),
+                  child: Text('Capacity: ${e.key}'),
                 ),
               )
               .toList(),
@@ -217,12 +217,12 @@ class _RoomCatalogScreenState extends State<RoomCatalogScreen> {
             ),
             const SizedBox(height: 12),
             const Text(
-              'Ruangan Tidak Ditemukan',
+              'No Rooms Found',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 6),
             const Text(
-              'Coba ubah kata kunci atau filter yang kamu pilih.',
+              'Try a different keyword or filter.',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
             ),
@@ -236,7 +236,7 @@ class _RoomCatalogScreenState extends State<RoomCatalogScreen> {
                   _minCapacity = 0;
                 });
               },
-              child: const Text('Reset Pencarian'),
+              child: const Text('Reset Search'),
             ),
           ],
         ),

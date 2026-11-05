@@ -55,21 +55,21 @@ class RegularSchedule {
   String get dayName {
     switch (dayOfWeek) {
       case 1:
-        return 'Senin';
+        return 'Monday';
       case 2:
-        return 'Selasa';
+        return 'Tuesday';
       case 3:
-        return 'Rabu';
+        return 'Wednesday';
       case 4:
-        return 'Kamis';
+        return 'Thursday';
       case 5:
-        return 'Jumat';
+        return 'Friday';
       case 6:
-        return 'Sabtu';
+        return 'Saturday';
       case 7:
-        return 'Minggu';
+        return 'Sunday';
       default:
-        return 'Tidak Diketahui';
+        return 'Unknown';
     }
   }
 

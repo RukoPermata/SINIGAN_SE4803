@@ -55,15 +55,15 @@ class _RoomConditionScreenState extends State<RoomConditionScreen> {
           length: 2,
           child: Scaffold(
             appBar: AppBar(
-              title: const Text('Tinjauan Kondisi Ruangan'),
+              title: const Text('Room Condition Review'),
               automaticallyImplyLeading: false,
               bottom: TabBar(
                 indicatorColor: AppColors.primary,
                 labelColor: AppColors.primary,
                 unselectedLabelColor: AppColors.textSecondary,
                 tabs: [
-                  Tab(text: 'Perlu Verifikasi (${pendingReview.length})'),
-                  Tab(text: 'Selesai (${completedReview.length})'),
+                  Tab(text: 'Needs Verification (${pendingReview.length})'),
+                  Tab(text: 'Done (${completedReview.length})'),
                 ],
               ),
             ),
@@ -73,13 +73,13 @@ class _RoomConditionScreenState extends State<RoomConditionScreen> {
                   items: pendingReview,
                   isCompleted: false,
                   emptyMessage:
-                      'Tidak ada sesi ruangan yang memerlukan verifikasi saat ini.',
+                      'No room sessions need verification right now.',
                 ),
                 _buildBookingList(
                   items: completedReview,
                   isCompleted: true,
                   emptyMessage:
-                      'Belum ada sesi peminjaman yang diverifikasi.',
+                      'No verified booking sessions yet.',
                 ),
               ],
             ),

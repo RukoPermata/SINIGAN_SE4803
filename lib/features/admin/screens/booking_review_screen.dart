@@ -39,7 +39,7 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detail Permohonan'),
+        title: const Text('Request Detail'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -85,7 +85,7 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
           const SizedBox(width: 12),
           const Expanded(
             child: Text(
-              'Status Permohonan',
+              'Request Status',
               style: AppTextStyles.cardTitle,
             ),
           ),
@@ -101,15 +101,15 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
   /// Menampilkan identitas pemohon.
   Widget _buildApplicantSection() {
     return _ReviewSection(
-      title: 'Informasi Pemohon',
+      title: 'Applicant Information',
       icon: Icons.person_outline,
       children: [
         _DetailRow(
-          label: 'Nama',
+          label: 'Name',
           value: widget.booking.userName,
         ),
         _DetailRow(
-          label: 'NIM',
+          label: 'Student ID',
           value: widget.booking.userNim,
         ),
       ],
@@ -119,23 +119,23 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
   /// Menampilkan informasi ruangan dan jadwal.
   Widget _buildBookingSection() {
     return _ReviewSection(
-      title: 'Informasi Peminjaman',
+      title: 'Booking Information',
       icon: Icons.meeting_room_outlined,
       children: [
         _DetailRow(
-          label: 'Ruangan',
+          label: 'Room',
           value: widget.booking.roomName,
         ),
         _DetailRow(
-          label: 'Gedung',
+          label: 'Building',
           value: widget.booking.building,
         ),
         _DetailRow(
-          label: 'Tanggal',
+          label: 'Date',
           value: DateTimeUtils.formatDateLong(widget.booking.date),
         ),
         _DetailRow(
-          label: 'Waktu',
+          label: 'Time',
           value:
               '${widget.booking.startTime} - ${widget.booking.endTime}',
         ),
@@ -146,7 +146,7 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
   /// Menampilkan tujuan kegiatan.
   Widget _buildPurposeSection() {
     return _ReviewSection(
-      title: 'Tujuan Kegiatan',
+      title: 'Purpose',
       icon: Icons.description_outlined,
       children: [
         Text(
@@ -160,7 +160,7 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
   /// Menampilkan alasan penolakan jika booking pernah ditolak.
   Widget _buildRejectionReasonSection() {
     return _ReviewSection(
-      title: 'Alasan Penolakan',
+      title: 'Rejection Reason',
       icon: Icons.info_outline,
       children: [
         Text(
@@ -186,7 +186,7 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
           borderRadius: BorderRadius.circular(16),
         ),
         child: Text(
-          'Permohonan ini sudah diproses sebelumnya.',
+          'This request has already been processed.',
           textAlign: TextAlign.center,
           style: AppTextStyles.body.copyWith(
             color: AppColors.textSecondary,
@@ -202,7 +202,7 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
           child: ElevatedButton.icon(
             onPressed: _approveBooking,
             icon: const Icon(Icons.check),
-            label: const Text('Approve Permohonan'),
+            label: const Text('Approve Request'),
           ),
         ),
         const SizedBox(height: 12),
@@ -211,7 +211,7 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
           child: OutlinedButton.icon(
             onPressed: _rejectBooking,
             icon: const Icon(Icons.close),
-            label: const Text('Reject Permohonan'),
+            label: const Text('Reject Request'),
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.error,
               side: const BorderSide(color: AppColors.error),
@@ -232,9 +232,9 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: const Text('Approve Permohonan?'),
+          title: const Text('Approve Request?'),
           content: const Text(
-            'Permohonan ini akan ditandai sebagai disetujui.',
+            'This request will be marked as approved.',
           ),
           actions: [
   SizedBox(
@@ -256,7 +256,7 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
             style: TextButton.styleFrom(
               foregroundColor: AppColors.textSecondary,
             ),
-            child: const Text('Batal'),
+            child: const Text('Cancel'),
           ),
         ),
       ],
@@ -279,7 +279,7 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Permohonan berhasil disetujui.'),
+        content: Text('Request approved successfully.'),
       ),
     );
 
@@ -296,7 +296,7 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
       builder: (dialogContext) {
         return AlertDialog(
           actionsAlignment: MainAxisAlignment.center,
-          title: const Text('Reject Permohonan'),
+          title: const Text('Reject Request'),
           content: Form(
             key: formKey,
             child: TextFormField(
@@ -304,17 +304,17 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
               autofocus: true,
               maxLines: 4,
               decoration: const InputDecoration(
-                labelText: 'Alasan penolakan',
-                hintText: 'Masukkan alasan penolakan...',
+                labelText: 'Rejection reason',
+                hintText: 'Enter a rejection reason...',
                 alignLabelWithHint: true,
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Alasan penolakan wajib diisi.';
+                  return 'A rejection reason is required.';
                 }
 
                 if (value.trim().length < 5) {
-                  return 'Alasan minimal terdiri dari 5 karakter.';
+                  return 'Reason must be at least 5 characters.';
                 }
 
                 return null;
@@ -349,7 +349,7 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
             style: TextButton.styleFrom(
               foregroundColor: AppColors.textSecondary,
             ),
-            child: const Text('Batal'),
+            child: const Text('Cancel'),
           ),
         ),
       ],
@@ -377,7 +377,7 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Permohonan berhasil ditolak.'),
+        content: Text('Request rejected successfully.'),
       ),
     );
 

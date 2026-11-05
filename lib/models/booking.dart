@@ -1,8 +1,8 @@
 /// Status permohonan peminjaman ruangan.
 enum BookingStatus {
-  pending('pending', 'Menunggu'),
-  approved('approved', 'Disetujui'),
-  rejected('rejected', 'Ditolak');
+  pending('pending', 'Pending'),
+  approved('approved', 'Approved'),
+  rejected('rejected', 'Rejected');
 
   const BookingStatus(this.value, this.label);
 

@@ -29,14 +29,14 @@ class StatusBadge extends StatelessWidget {
         textColor = AppColors.success;
         bgColor = AppColors.successLight;
         label = customLabel ??
-            (status == 'active' ? 'Aktif' : (status == 'tersedia' ? 'Tersedia' : 'Disetujui'));
+            (status == 'active' ? 'Active' : (status == 'tersedia' ? 'Available' : 'Approved'));
         break;
 
       case 'pending':
       case 'menunggu':
         textColor = AppColors.warning;
         bgColor = AppColors.warningLight;
-        label = customLabel ?? 'Menunggu';
+        label = customLabel ?? 'Pending';
         break;
 
       case 'rejected':
@@ -45,7 +45,7 @@ class StatusBadge extends StatelessWidget {
       default:
         textColor = AppColors.error;
         bgColor = AppColors.errorLight;
-        label = customLabel ?? (status == 'inactive' ? 'Nonaktif' : 'Ditolak');
+        label = customLabel ?? (status == 'inactive' ? 'Inactive' : 'Rejected');
         break;
     }
 

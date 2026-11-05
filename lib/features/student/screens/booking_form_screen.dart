@@ -95,15 +95,15 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
     final endMin = _toMinutes(_endTime);
 
     if (endMin <= startMin) {
-      _showError('Jam selesai harus lebih besar daripada jam mulai.');
+      _showError('End time must be after start time.');
       return;
     }
 
     if (!MockDataStore.instance
         .isSlotAvailable(widget.room.id, _date, startMin, endMin)) {
       _showError(
-        'Slot waktu yang dipilih bentrok dengan jadwal kuliah, peminjaman lain, '
-        'atau periode pemblokiran.',
+        'The selected time overlaps with a class, another booking, '
+        'or a blackout period.',
       );
       return;
     }
@@ -126,8 +126,8 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
     MockDataStore.instance.addBooking(booking);
 
     Get.snackbar(
-      'Pengajuan Terkirim',
-      'Permohonan untuk ${widget.room.name} sedang menunggu persetujuan admin.',
+      'Request Submitted',
+      'Your request for ${widget.room.name} is awaiting admin approval.',
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: AppColors.success,
       colorText: Colors.white,
@@ -139,7 +139,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
 
   void _showError(String message) {
     Get.snackbar(
-      'Validasi Gagal',
+      'Validation Failed',
       message,
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: AppColors.error,
@@ -151,7 +151,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Ajukan Peminjaman')),
+      appBar: AppBar(title: const Text('Request Booking')),
       body: Form(
         key: _formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -160,7 +160,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
           children: [
             _buildRoomBanner(),
             const SizedBox(height: 20),
-            _label('Tanggal Kegiatan'),
+            _label('Activity Date'),
             const SizedBox(height: 8),
             _buildPickerTile(
               icon: Icons.calendar_today_outlined,
@@ -174,7 +174,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _label('Jam Mulai'),
+                      _label('Start Time'),
                       const SizedBox(height: 8),
                       _buildPickerTile(
                         icon: Icons.schedule,
@@ -189,7 +189,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _label('Jam Selesai'),
+                      _label('End Time'),
                       const SizedBox(height: 8),
                       _buildPickerTile(
                         icon: Icons.schedule,
@@ -202,7 +202,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
               ],
             ),
             const SizedBox(height: 18),
-            _label('Tujuan Kegiatan'),
+            _label('Purpose'),
             const SizedBox(height: 8),
             TextFormField(
               controller: _purposeController,
@@ -210,12 +210,12 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
               maxLength: 200,
               decoration: const InputDecoration(
                 hintText:
-                    'Contoh: Tutorial tambahan mata kuliah, rapat himpunan, dll.',
+                    'e.g. Extra class tutorial, student council meeting, etc.',
               ),
               validator: (value) {
                 final text = value?.trim() ?? '';
-                if (text.isEmpty) return 'Tujuan kegiatan wajib diisi';
-                if (text.length < 5) return 'Tujuan terlalu singkat';
+                if (text.isEmpty) return 'Purpose is required';
+                if (text.length < 5) return 'Purpose is too short';
                 return null;
               },
             ),
@@ -225,7 +225,7 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
             ElevatedButton.icon(
               onPressed: _submit,
               icon: const Icon(Icons.send_rounded, size: 18),
-              label: const Text('Kirim Pengajuan'),
+              label: const Text('Submit Request'),
             ),
           ],
         ),
@@ -333,8 +333,8 @@ class _BookingFormScreenState extends State<BookingFormScreen> {
           SizedBox(width: 10),
           Expanded(
             child: Text(
-              'Pengajuan akan diperiksa oleh admin. Status permohonan dapat '
-              'dipantau pada menu Riwayat.',
+              'Your request will be reviewed by an admin. You can track its status '
+              'in the History tab.',
               style: TextStyle(
                 fontSize: 12,
                 height: 1.5,

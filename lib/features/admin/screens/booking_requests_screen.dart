@@ -22,7 +22,6 @@ class BookingRequestsScreen extends StatefulWidget {
   @override
   State<BookingRequestsScreen> createState() => _BookingRequestsScreenState();
 }
-
 class _BookingRequestsScreenState extends State<BookingRequestsScreen> {
   /// Mengambil data booking dari satu sumber data global.
   final MockDataStore _dataStore = MockDataStore.instance;
@@ -75,8 +74,13 @@ List<Booking> _filterBookings(List<Booking> bookings) {
 
   /// BookingReviewScreen dibuka kalau kartu ditekan
   Future<void> _openBookingDetail(Booking booking) async {
-    await Get.to<bool>(
-      () => BookingReviewScreen(booking: booking),
+    await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BookingReviewScreen(
+          booking: booking,
+        ),
+      ),
     );
   }
 
@@ -84,7 +88,7 @@ List<Booking> _filterBookings(List<Booking> bookings) {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Permohonan Peminjaman'),
+        title: const Text('Booking Requests'),
         automaticallyImplyLeading: false,
       ),
       body: GetBuilder<MockDataStore>(
@@ -115,7 +119,7 @@ List<Booking> _filterBookings(List<Booking> bookings) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
       child: Text(
-        'Tinjau dan kelola permohonan peminjaman ruangan.',
+        'Review and manage room booking requests.',
         style: AppTextStyles.body.copyWith(
           color: AppColors.textSecondary,
         ),
@@ -132,7 +136,7 @@ List<Booking> _filterBookings(List<Booking> bookings) {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
           _buildFilterChip(
-            label: 'Semua',
+            label: 'All',
             status: null,
           ),
           const SizedBox(width: 8),
@@ -202,8 +206,8 @@ List<Booking> _filterBookings(List<Booking> bookings) {
   /// Menampilkan tampilan ketika hasil filter kosong.
   Widget _buildEmptyState() {
     final filterLabel = _selectedStatus == null
-        ? 'permohonan'
-        : 'permohonan ${_selectedStatus!.label.toLowerCase()}';
+        ? 'requests'
+        : '${_selectedStatus!.label.toLowerCase()} requests';
 
     return Center(
       child: Padding(
@@ -218,13 +222,13 @@ List<Booking> _filterBookings(List<Booking> bookings) {
             ),
             const SizedBox(height: 16),
             Text(
-              'Tidak ada $filterLabel',
+              'No $filterLabel',
               textAlign: TextAlign.center,
               style: AppTextStyles.sectionTitle,
             ),
             const SizedBox(height: 8),
             Text(
-              'Belum ada data permohonan yang sesuai dengan filter ini.',
+              'No requests match this filter.',
               textAlign: TextAlign.center,
               style: AppTextStyles.body.copyWith(
                 color: AppColors.textSecondary,
