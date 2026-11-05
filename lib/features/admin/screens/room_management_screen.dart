@@ -1,6 +1,7 @@
 // PIC: Fityah - Room Management Screen - FR-10
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
@@ -135,9 +136,9 @@ class _RoomManagementScreenState extends State<RoomManagementScreen> {
         ),
         onPressed: () => _showRoomFormModal(),
       ),
-      body: ListenableBuilder(
-        listenable: MockDataStore.instance,
-        builder: (context, _) {
+      body: GetBuilder<MockDataStore>(
+        init: MockDataStore.instance,
+        builder: (_) {
           final allRooms = MockDataStore.instance.rooms;
 
           // Hitung ringkasan statistik
