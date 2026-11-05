@@ -22,7 +22,6 @@ class BookingRequestsScreen extends StatefulWidget {
   @override
   State<BookingRequestsScreen> createState() => _BookingRequestsScreenState();
 }
-
 class _BookingRequestsScreenState extends State<BookingRequestsScreen> {
   /// Mengambil data booking dari satu sumber data global.
   final MockDataStore _dataStore = MockDataStore.instance;
@@ -75,8 +74,13 @@ List<Booking> _filterBookings(List<Booking> bookings) {
 
   /// BookingReviewScreen dibuka kalau kartu ditekan
   Future<void> _openBookingDetail(Booking booking) async {
-    await Get.to<bool>(
-      () => BookingReviewScreen(booking: booking),
+    await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BookingReviewScreen(
+          booking: booking,
+        ),
+      ),
     );
   }
 
