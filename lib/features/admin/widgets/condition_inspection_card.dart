@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/date_time_utils.dart';
+import '../../../core/widgets/status_badge.dart';
 import '../../../models/booking.dart';
 
 /// Kartu ringkasan antrean pemeriksaan kondisi ruangan.
@@ -62,26 +63,13 @@ class ConditionInspectionCard extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-          decoration: BoxDecoration(
-            color: isCompleted
-                ? AppColors.successLight
-                : (isMatching ? AppColors.successLight : AppColors.warningLight),
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: Text(
-            isCompleted
-                ? 'Terverifikasi'
-                : (isMatching ? 'Layout Sesuai' : 'Perlu Tinjauan'),
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: isCompleted
-                  ? AppColors.success
-                  : (isMatching ? AppColors.success : AppColors.warning),
-            ),
-          ),
+        StatusBadge(
+          status: isCompleted
+              ? 'approved'
+              : (isMatching ? 'approved' : 'pending'),
+          customLabel: isCompleted
+              ? 'Terverifikasi'
+              : (isMatching ? 'Layout Sesuai' : 'Perlu Tinjauan'),
         ),
       ],
     );
