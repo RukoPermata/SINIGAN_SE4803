@@ -139,4 +139,52 @@ class Booking {
       createdAt: createdAt ?? this.createdAt,
     );
   }
+
+  /// Serialisasi entitas ke Map agar dapat disimpan sebagai JSON lokal.
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'roomId': roomId,
+      'roomName': roomName,
+      'building': building,
+      'userName': userName,
+      'userNim': userNim,
+      'date': date.toIso8601String(),
+      'startTime': startTime,
+      'endTime': endTime,
+      'purpose': purpose,
+      'status': status.value,
+      'rejectionReason': rejectionReason,
+      'beforePhotoUrl': beforePhotoUrl,
+      'afterPhotoUrl': afterPhotoUrl,
+      'predictedLayout': predictedLayout,
+      'cvConfidence': cvConfidence,
+      'createdAt': createdAt?.toIso8601String(),
+    };
+  }
+
+  /// Membuat entitas Booking dari Map hasil dekode JSON.
+  factory Booking.fromJson(Map<String, dynamic> json) {
+    return Booking(
+      id: json['id'] as String,
+      roomId: json['roomId'] as String,
+      roomName: json['roomName'] as String,
+      building: json['building'] as String? ?? '',
+      userName: json['userName'] as String? ?? '',
+      userNim: json['userNim'] as String? ?? '',
+      date: DateTime.parse(json['date'] as String),
+      startTime: json['startTime'] as String? ?? '00:00',
+      endTime: json['endTime'] as String? ?? '00:00',
+      purpose: json['purpose'] as String? ?? '',
+      status: BookingStatus.fromString(json['status'] as String? ?? 'pending'),
+      rejectionReason: json['rejectionReason'] as String?,
+      beforePhotoUrl: json['beforePhotoUrl'] as String?,
+      afterPhotoUrl: json['afterPhotoUrl'] as String?,
+      predictedLayout: json['predictedLayout'] as String?,
+      cvConfidence: (json['cvConfidence'] as num?)?.toDouble(),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
+          : null,
+    );
+  }
 }
